@@ -18,7 +18,7 @@
     />
 
     <!-- Built CSS -->
-    <link rel="stylesheet" href="dist/output.css?v=5" />
+    <link rel="stylesheet" href="dist/output.css?v=6" />
 
     <!-- Alpine.js -->
     <script
@@ -72,7 +72,7 @@
             <button
               x-show="isAdminMode"
               @click="openCategoryModal()"
-              class="category-add w-7 flex justify-center"
+              class="category-add"
               title="Add Category"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +88,7 @@
               :class="activeCategory === null ? 'sidebar-item active' : 'sidebar-item'"
             >
               <span class="flex-1 truncate">All prompts</span>
-              <span class="badge shrink-0 w-7 text-center" x-text="prompts.length"></span>
+              <span class="badge" x-text="prompts.length"></span>
             </div>
 
             <!-- Dynamic Categories -->
@@ -99,11 +99,11 @@
                 class="group"
               >
                 <span class="flex-1 truncate" x-text="category.name"></span>
-                <span class="badge shrink-0 w-7 text-center" x-text="getPromptCount(category.id)"></span>
+                <span class="badge" x-text="getPromptCount(category.id)"></span>
                 <button
                   x-show="isAdminMode"
                   @click.stop="deleteCategory(category.id)"
-                  class="shrink-0 w-5 opacity-0 group-hover:opacity-100 text-muted hover:text-red-400 transition-opacity flex items-center justify-center"
+                  class="ml-2 opacity-0 group-hover:opacity-100 text-muted hover:text-red-400 transition-opacity"
                   title="Delete Category"
                 >
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@
         </div>
 
         <!-- Sidebar Footer -->
-        <div class="p-4 flex justify-center">
+        <div class="p-4 text-center">
           <!-- Admin Mode Link (when not in admin mode) -->
           <button
             x-show="!isAdminMode"
@@ -130,7 +130,7 @@
           </button>
           
           <!-- Admin Mode Active (when in admin mode) -->
-          <div x-show="isAdminMode" class="flex items-center gap-2">
+          <div x-show="isAdminMode" class="inline-flex items-center gap-2">
             <span class="text-sm italic" style="color: #ACACAC;">Admin mode</span>
             <button 
               @click="exitAdminMode()" 
