@@ -18,7 +18,7 @@
     />
 
     <!-- Built CSS -->
-    <link rel="stylesheet" href="dist/output.css?v=12" />
+    <link rel="stylesheet" href="dist/output.css?v=13" />
 
     <!-- Alpine.js -->
     <script
@@ -79,6 +79,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
             </span>
+            <!-- Spacer to match delete button width in admin mode -->
+            <span x-show="isAdminMode" class="w-5 ml-1"></span>
           </div>
 
           <nav class="space-y-1">
@@ -89,6 +91,8 @@
             >
               <span class="flex-1 truncate">All prompts</span>
               <span class="badge w-7 text-center" x-text="prompts.length"></span>
+              <!-- Spacer to match delete button width in admin mode -->
+              <span x-show="isAdminMode" class="w-5 ml-1"></span>
             </div>
 
             <!-- Dynamic Categories -->
