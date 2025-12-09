@@ -18,7 +18,7 @@
     />
 
     <!-- Built CSS -->
-    <link rel="stylesheet" href="dist/output.css?v=17" />
+    <link rel="stylesheet" href="dist/output.css?v=18" />
 
     <!-- Alpine.js -->
     <script
@@ -86,10 +86,12 @@
             <div
               @click="activeCategory = null"
               :class="activeCategory === null ? 'sidebar-item active' : 'sidebar-item'"
-              class="pr-3"
             >
               <span class="flex-1 truncate">All prompts</span>
-              <span class="badge w-7 text-center" x-text="prompts.length"></span>
+              <div class="flex items-center gap-2.5 shrink-0">
+                <span class="badge w-7 text-center" x-text="prompts.length"></span>
+                <div class="w-5 h-5" x-show="isAdminMode"></div>
+              </div>
             </div>
 
             <!-- Dynamic Categories -->
@@ -97,21 +99,22 @@
               <div
                 @click="activeCategory = category.id"
                 :class="activeCategory === category.id ? 'sidebar-item active' : 'sidebar-item'"
-                class="group relative pr-3"
+                class="group"
               >
                 <span class="flex-1 truncate" x-text="category.name"></span>
-                <span class="badge w-7 text-center" x-text="getPromptCount(category.id)"></span>
-                <button
-                  x-show="isAdminMode"
-                  @click.stop="deleteCategory(category.id)"
-                  style="right: -8px;"
-                  class="absolute top-1/2 -translate-y-1/2 w-5 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 text-muted hover:text-red-400 transition-opacity"
-                  title="Delete Category"
-                >
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <span class="badge w-7 text-center" x-text="getPromptCount(category.id)"></span>
+                  <button
+                    x-show="isAdminMode"
+                    @click.stop="deleteCategory(category.id)"
+                    class="w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 text-muted hover:text-red-400 transition-opacity"
+                    title="Delete Category"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </template>
           </nav>
