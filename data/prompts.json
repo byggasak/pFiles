@@ -1,0 +1,29 @@
+{
+  "categories": [
+    {
+      "id": "development",
+      "name": "Development",
+      "color": "#22c55e"
+    },
+    {
+      "id": "writing",
+      "name": "Writing",
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "analysis",
+      "name": "Analysis",
+      "color": "#06b6d4"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "1733744400000",
+      "title": "Code Review Assistant",
+      "content": "You are an expert code reviewer. Analyze the following code and provide feedback on:\n\n1. Code quality and readability\n2. Potential bugs or edge cases\n3. Performance considerations\n4. Security vulnerabilities\n5. Best practices and improvements\n\nBe constructive and specific in your feedback.",
+      "categoryId": "development",
+      "createdAt": "2024-12-09T10:00:00.000Z"
+    }
+  ]
+}
+
