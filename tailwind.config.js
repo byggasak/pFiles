@@ -11,7 +11,7 @@ module.exports = {
         // New color palette matching Figma design
         background: "#0A0A0A",
         sidebar: "#111111",
-        card: "#0D0D0D",
+        card: "#111111",
         surface: "#0A0A0A",
         border: "#1F1F1F",
         "border-light": "#2A2A2A",
