@@ -27,7 +27,7 @@
     ></script>
   </head>
 
-  <body x-data="pFilesApp()" x-init="init()">
+  <body x-data="pFilesApp()" x-init="init()" @keydown.window="handleKeydown($event)">
     <!-- Toast Notification -->
     <div
       x-show="toast.show"
@@ -56,9 +56,13 @@
       <aside
         class="w-64 bg-sidebar border-r border-slate-800 flex flex-col shrink-0"
       >
-        <!-- Logo -->
+        <!-- Logo (Triple-click to access admin) -->
         <div class="p-6 border-b border-slate-800">
-          <div class="flex items-center gap-3">
+          <div 
+            class="flex items-center gap-3 cursor-default select-none"
+            @click="handleLogoClick()"
+            title="pFiles"
+          >
             <div
               class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center"
             >
@@ -88,11 +92,10 @@
           <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Categories</span>
             <button
+              x-show="isAdminMode"
               @click="openCategoryModal()"
               class="p-1 text-slate-500 hover:text-indigo-400 hover:bg-slate-800 rounded transition-colors"
               title="Add Category"
-              :disabled="!isConfigured"
-              :class="!isConfigured && 'opacity-50 cursor-not-allowed'"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -127,7 +130,7 @@
                 <span class="flex-1 truncate" x-text="category.name"></span>
                 <span class="badge" x-text="getPromptCount(category.id)"></span>
                 <button
-                  x-show="isConfigured"
+                  x-show="isAdminMode"
                   @click.stop="deleteCategory(category.id)"
                   class="opacity-0 group-hover:opacity-100 p-1 text-slate-500 hover:text-red-400 transition-opacity"
                   title="Delete Category"
@@ -143,18 +146,22 @@
 
         <!-- Sidebar Footer -->
         <div class="p-4 border-t border-slate-800 space-y-2">
-          <button
-            @click="openSettingsModal()"
-            class="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <!-- Admin Mode Indicator (only visible when in admin mode) -->
+          <div x-show="isAdminMode" class="flex items-center gap-2 px-3 py-2 bg-indigo-600/10 border border-indigo-500/30 rounded-lg">
+            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
-            <span>Settings</span>
-            <span x-show="isConfigured" class="ml-auto w-2 h-2 bg-emerald-500 rounded-full"></span>
-            <span x-show="!isConfigured" class="ml-auto w-2 h-2 bg-amber-500 rounded-full"></span>
-          </button>
+            <span class="text-xs text-indigo-400 font-medium">Admin Mode</span>
+            <button 
+              @click="exitAdminMode()" 
+              class="ml-auto text-indigo-400 hover:text-indigo-300"
+              title="Exit Admin Mode"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
+          </div>
           <p class="text-xs text-slate-600 text-center">
             Data stored on GitHub
           </p>
@@ -191,20 +198,19 @@
 
             <div class="flex-1"></div>
 
-            <!-- Sync Status -->
-            <div x-show="isConfigured" class="flex items-center gap-2 text-sm text-slate-500">
+            <!-- Sync Status (only in admin mode) -->
+            <div x-show="isAdminMode && isConfigured" class="flex items-center gap-2 text-sm text-slate-500">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
               <span>Synced with GitHub</span>
             </div>
 
-            <!-- Add Prompt Button -->
+            <!-- Add Prompt Button (only in admin mode) -->
             <button
+              x-show="isAdminMode"
               @click="openPromptModal()"
               class="btn-primary"
-              :disabled="!isConfigured"
-              :class="!isConfigured && 'opacity-50 cursor-not-allowed'"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -216,8 +222,8 @@
 
         <!-- Content Area -->
         <div class="flex-1 overflow-y-auto p-6">
-          <!-- Setup Required Banner -->
-          <template x-if="!isConfigured && !loading">
+          <!-- Admin Token Required Banner (only in admin mode without token) -->
+          <template x-if="isAdminMode && !isConfigured">
             <div class="mb-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
               <div class="flex items-start gap-3">
                 <svg class="w-6 h-6 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -225,9 +231,9 @@
                 </svg>
                 <div>
                   <h3 class="font-semibold text-amber-500">GitHub Token Required</h3>
-                  <p class="text-sm text-slate-400 mt-1">To add and manage prompts, please configure your GitHub Personal Access Token in Settings.</p>
-                  <button @click="openSettingsModal()" class="mt-3 text-sm font-medium text-amber-500 hover:text-amber-400">
-                    Configure Settings →
+                  <p class="text-sm text-slate-400 mt-1">To add and manage prompts, please configure your GitHub Personal Access Token.</p>
+                  <button @click="openAdminModal()" class="mt-3 text-sm font-medium text-amber-500 hover:text-amber-400">
+                    Configure Token →
                   </button>
                 </div>
               </div>
@@ -245,10 +251,10 @@
               <h3 class="text-xl font-semibold text-slate-300 mb-2">No prompts found</h3>
               <p class="text-slate-500 mb-6 max-w-sm">
                 <span x-show="searchQuery">No prompts match your search. Try a different query.</span>
-                <span x-show="!searchQuery && activeCategory">This category is empty. Add your first prompt!</span>
-                <span x-show="!searchQuery && !activeCategory">Start building your prompt library by adding your first template.</span>
+                <span x-show="!searchQuery && activeCategory">This category is empty.</span>
+                <span x-show="!searchQuery && !activeCategory">No prompt templates available yet.</span>
               </p>
-              <button @click="openPromptModal()" class="btn-primary" x-show="!searchQuery && isConfigured">
+              <button x-show="isAdminMode && !searchQuery" @click="openPromptModal()" class="btn-primary">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
@@ -278,7 +284,7 @@
                         </template>
                       </div>
                       <button
-                        x-show="isConfigured"
+                        x-show="isAdminMode"
                         @click="deletePrompt(prompt.id)"
                         class="btn-danger p-1.5"
                         title="Delete Prompt"
@@ -456,9 +462,9 @@
       </div>
     </div>
 
-    <!-- Settings Modal -->
+    <!-- Admin Access Modal (Password + Token) -->
     <div
-      x-show="settingsModal.open"
+      x-show="adminModal.open"
       x-transition:enter="transition ease-out duration-200"
       x-transition:enter-start="opacity-0"
       x-transition:enter-end="opacity-100"
@@ -466,21 +472,50 @@
       x-transition:leave-start="opacity-100"
       x-transition:leave-end="opacity-0"
       class="modal-overlay"
-      @click.self="closeSettingsModal()"
+      @click.self="closeAdminModal()"
     >
-      <div class="modal-content max-w-xl" @click.stop>
+      <div class="modal-content max-w-md" @click.stop>
         <div class="p-6 border-b border-slate-700">
-          <h2 class="text-xl font-bold text-white">Settings</h2>
-          <p class="text-sm text-slate-400 mt-1">Configure GitHub integration</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-indigo-600/20 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-white">Admin Access</h2>
+              <p class="text-sm text-slate-400">Enter credentials to manage prompts</p>
+            </div>
+          </div>
         </div>
 
-        <form @submit.prevent="saveSettings()" class="p-6 space-y-5">
-          <!-- GitHub Token -->
+        <form @submit.prevent="handleAdminAuth()" class="p-6 space-y-5">
+          <!-- Admin Password -->
           <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">Admin Password</label>
+            <input
+              type="password"
+              x-model="adminModal.form.password"
+              placeholder="Enter admin password"
+              class="input-field"
+              required
+              :disabled="adminModal.authenticated"
+            />
+            <div x-show="adminModal.authenticated" class="flex items-center gap-2 mt-2 text-emerald-400 text-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Password verified</span>
+            </div>
+            <p x-show="adminModal.error" class="text-red-400 text-sm mt-2" x-text="adminModal.error"></p>
+          </div>
+
+          <!-- GitHub Token (only shown after password is verified) -->
+          <div x-show="adminModal.authenticated" x-transition>
             <label class="block text-sm font-medium text-slate-300 mb-2">GitHub Personal Access Token</label>
             <input
               type="password"
-              x-model="settingsModal.form.token"
+              x-model="adminModal.form.token"
               placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
               class="input-field font-mono"
             />
@@ -491,42 +526,26 @@
               </a>
               with <code class="px-1.5 py-0.5 bg-slate-700 rounded">repo</code> scope.
             </p>
-          </div>
-
-          <!-- Repository Info (read-only) -->
-          <div class="p-4 bg-slate-900/50 rounded-lg space-y-2">
-            <div class="flex justify-between text-sm">
-              <span class="text-slate-500">Repository</span>
-              <span class="text-slate-300 font-mono" x-text="config.repo"></span>
+            
+            <!-- Current Status -->
+            <div x-show="isConfigured" class="flex items-center gap-2 mt-3 p-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
+              <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span class="text-sm text-emerald-400">Token configured</span>
             </div>
-            <div class="flex justify-between text-sm">
-              <span class="text-slate-500">Owner</span>
-              <span class="text-slate-300 font-mono" x-text="config.owner"></span>
-            </div>
-            <div class="flex justify-between text-sm">
-              <span class="text-slate-500">Data File</span>
-              <span class="text-slate-300 font-mono" x-text="config.path"></span>
-            </div>
-          </div>
-
-          <!-- Status -->
-          <div x-show="isConfigured" class="flex items-center gap-2 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
-            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-            <span class="text-sm text-emerald-400">Connected and ready</span>
           </div>
 
           <!-- Actions -->
           <div class="flex gap-3 pt-2">
-            <button type="button" @click="closeSettingsModal()" class="btn-secondary flex-1">
+            <button type="button" @click="closeAdminModal()" class="btn-secondary flex-1">
               Cancel
             </button>
-            <button type="submit" class="btn-primary flex-1">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Save Settings</span>
+            <button 
+              type="submit" 
+              class="btn-primary flex-1"
+              x-text="adminModal.authenticated ? 'Save & Enter Admin Mode' : 'Verify Password'"
+            >
             </button>
           </div>
         </form>
@@ -544,6 +563,9 @@
             branch: "main",
           },
 
+          // Admin Configuration
+          ADMIN_PASSWORD: "pFiles!admin",
+
           // State
           prompts: [],
           categories: [],
@@ -552,7 +574,12 @@
           loading: true,
           loadingMessage: "Loading prompts...",
           saving: false,
-          fileSha: null, // Required for GitHub API updates
+          fileSha: null,
+
+          // Admin state
+          isAdminMode: false,
+          logoClickCount: 0,
+          logoClickTimer: null,
 
           // Color options for categories
           colorOptions: [
@@ -576,9 +603,11 @@
             open: false,
             form: { name: "", color: "#6366f1" },
           },
-          settingsModal: {
+          adminModal: {
             open: false,
-            form: { token: "" },
+            authenticated: false,
+            error: "",
+            form: { password: "", token: "" },
           },
 
           // Computed
@@ -608,8 +637,83 @@
 
           // Initialize
           async init() {
-            this.settingsModal.form.token = this.githubToken;
+            // Check if admin session exists (sessionStorage - expires when browser closes)
+            this.isAdminMode = sessionStorage.getItem("pfiles_admin") === "true";
             await this.loadData();
+          },
+
+          // Handle keyboard shortcuts
+          handleKeydown(event) {
+            // Ctrl+Shift+A or Cmd+Shift+A to open admin modal
+            if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "A") {
+              event.preventDefault();
+              this.openAdminModal();
+            }
+          },
+
+          // Handle logo click (triple-click to access admin)
+          handleLogoClick() {
+            this.logoClickCount++;
+            
+            if (this.logoClickTimer) {
+              clearTimeout(this.logoClickTimer);
+            }
+
+            if (this.logoClickCount >= 5) {
+              this.logoClickCount = 0;
+              this.openAdminModal();
+            } else {
+              this.logoClickTimer = setTimeout(() => {
+                this.logoClickCount = 0;
+              }, 500);
+            }
+          },
+
+          // Admin modal
+          openAdminModal() {
+            this.adminModal.form.password = "";
+            this.adminModal.form.token = this.githubToken;
+            this.adminModal.authenticated = false;
+            this.adminModal.error = "";
+            this.adminModal.open = true;
+          },
+
+          closeAdminModal() {
+            this.adminModal.open = false;
+            this.adminModal.authenticated = false;
+            this.adminModal.error = "";
+          },
+
+          handleAdminAuth() {
+            // Step 1: Verify password
+            if (!this.adminModal.authenticated) {
+              if (this.adminModal.form.password === this.ADMIN_PASSWORD) {
+                this.adminModal.authenticated = true;
+                this.adminModal.error = "";
+              } else {
+                this.adminModal.error = "Incorrect password";
+              }
+              return;
+            }
+
+            // Step 2: Save token and enter admin mode
+            const token = this.adminModal.form.token.trim();
+            if (token) {
+              localStorage.setItem("pfiles_github_token", token);
+            }
+
+            // Set admin session
+            sessionStorage.setItem("pfiles_admin", "true");
+            this.isAdminMode = true;
+            
+            this.closeAdminModal();
+            this.showToast("Admin mode activated");
+          },
+
+          exitAdminMode() {
+            sessionStorage.removeItem("pfiles_admin");
+            this.isAdminMode = false;
+            this.showToast("Exited admin mode");
           },
 
           // Load data from GitHub
@@ -640,7 +744,7 @@
 
             } catch (error) {
               console.error("Failed to load data:", error);
-              this.showToast("Failed to load prompts. Check settings.", "error");
+              this.showToast("Failed to load prompts", "error");
             } finally {
               this.loading = false;
             }
@@ -649,7 +753,7 @@
           // Save data to GitHub
           async saveData() {
             if (!this.githubToken) {
-              this.showToast("Please configure GitHub token in Settings", "error");
+              this.showToast("Please configure GitHub token", "error");
               return false;
             }
 
@@ -697,6 +801,7 @@
           openPromptModal() {
             if (!this.isConfigured) {
               this.showToast("Please configure GitHub token first", "error");
+              this.openAdminModal();
               return;
             }
             this.promptModal.form = {
@@ -731,7 +836,6 @@
               this.closePromptModal();
               this.showToast("Prompt saved to GitHub!");
             } else {
-              // Rollback
               this.prompts = this.prompts.filter((p) => p.id !== newPrompt.id);
             }
           },
@@ -759,6 +863,7 @@
           openCategoryModal() {
             if (!this.isConfigured) {
               this.showToast("Please configure GitHub token first", "error");
+              this.openAdminModal();
               return;
             }
             this.categoryModal.form = { name: "", color: "#6366f1" };
@@ -818,32 +923,6 @@
               this.categories = backupCategories;
               this.prompts = backupPrompts;
             }
-          },
-
-          // Settings
-          openSettingsModal() {
-            this.settingsModal.form.token = this.githubToken;
-            this.settingsModal.open = true;
-          },
-
-          closeSettingsModal() {
-            this.settingsModal.open = false;
-          },
-
-          async saveSettings() {
-            const token = this.settingsModal.form.token.trim();
-
-            if (token) {
-              localStorage.setItem("pfiles_github_token", token);
-            } else {
-              localStorage.removeItem("pfiles_github_token");
-            }
-
-            this.closeSettingsModal();
-            this.showToast("Settings saved!");
-
-            // Reload data with new token
-            await this.loadData();
           },
 
           // Helpers
