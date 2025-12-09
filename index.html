@@ -18,7 +18,7 @@
     />
 
     <!-- Built CSS -->
-    <link rel="stylesheet" href="dist/output.css?v=4" />
+    <link rel="stylesheet" href="dist/output.css?v=5" />
 
     <!-- Alpine.js -->
     <script
@@ -67,12 +67,12 @@
 
         <!-- Categories -->
         <div class="flex-1 overflow-y-auto px-4">
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-semibold text-muted uppercase tracking-wider">Categories</span>
+          <div class="flex items-center mb-4">
+            <span class="text-xs font-semibold text-muted uppercase tracking-wider flex-1">Categories</span>
             <button
               x-show="isAdminMode"
               @click="openCategoryModal()"
-              class="category-add"
+              class="category-add w-7 flex justify-center"
               title="Add Category"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +88,7 @@
               :class="activeCategory === null ? 'sidebar-item active' : 'sidebar-item'"
             >
               <span class="flex-1 truncate">All prompts</span>
-              <span class="badge shrink-0" x-text="prompts.length"></span>
+              <span class="badge shrink-0 w-7 text-center" x-text="prompts.length"></span>
             </div>
 
             <!-- Dynamic Categories -->
@@ -99,11 +99,11 @@
                 class="group"
               >
                 <span class="flex-1 truncate" x-text="category.name"></span>
-                <span class="badge shrink-0" x-text="getPromptCount(category.id)"></span>
+                <span class="badge shrink-0 w-7 text-center" x-text="getPromptCount(category.id)"></span>
                 <button
                   x-show="isAdminMode"
                   @click.stop="deleteCategory(category.id)"
-                  class="shrink-0 ml-1 opacity-0 group-hover:opacity-100 p-1 text-muted hover:text-red-400 transition-opacity"
+                  class="shrink-0 w-5 opacity-0 group-hover:opacity-100 text-muted hover:text-red-400 transition-opacity flex items-center justify-center"
                   title="Delete Category"
                 >
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@
         </div>
 
         <!-- Sidebar Footer -->
-        <div class="p-4">
+        <div class="p-4 flex justify-center">
           <!-- Admin Mode Link (when not in admin mode) -->
           <button
             x-show="!isAdminMode"
