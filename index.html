@@ -18,7 +18,7 @@
     />
 
     <!-- Built CSS -->
-    <link rel="stylesheet" href="dist/output.css?v=2" />
+    <link rel="stylesheet" href="dist/output.css?v=4" />
 
     <!-- Alpine.js -->
     <script
@@ -53,7 +53,7 @@
 
     <div class="flex h-screen overflow-hidden">
       <!-- Sidebar -->
-      <aside class="w-56 bg-sidebar flex flex-col shrink-0">
+      <aside class="w-64 bg-sidebar flex flex-col shrink-0">
         <!-- Logo -->
         <div class="px-6 py-8">
           <div 
@@ -87,8 +87,8 @@
               @click="activeCategory = null"
               :class="activeCategory === null ? 'sidebar-item active' : 'sidebar-item'"
             >
-              <span class="flex-1">All prompts</span>
-              <span class="badge" x-text="prompts.length"></span>
+              <span class="flex-1 truncate">All prompts</span>
+              <span class="badge shrink-0" x-text="prompts.length"></span>
             </div>
 
             <!-- Dynamic Categories -->
@@ -99,11 +99,11 @@
                 class="group"
               >
                 <span class="flex-1 truncate" x-text="category.name"></span>
-                <span class="badge" x-text="getPromptCount(category.id)"></span>
+                <span class="badge shrink-0" x-text="getPromptCount(category.id)"></span>
                 <button
                   x-show="isAdminMode"
                   @click.stop="deleteCategory(category.id)"
-                  class="opacity-0 group-hover:opacity-100 p-1 text-muted hover:text-red-400 transition-opacity"
+                  class="shrink-0 ml-1 opacity-0 group-hover:opacity-100 p-1 text-muted hover:text-red-400 transition-opacity"
                   title="Delete Category"
                 >
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
