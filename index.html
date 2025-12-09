@@ -18,7 +18,7 @@
     />
 
     <!-- Built CSS -->
-    <link rel="stylesheet" href="dist/output.css?v=11" />
+    <link rel="stylesheet" href="dist/output.css?v=12" />
 
     <!-- Alpine.js -->
     <script
@@ -67,18 +67,18 @@
 
         <!-- Categories -->
         <div class="flex-1 overflow-y-auto px-4">
-          <div class="flex items-center mb-4">
+          <div class="flex items-center mb-4 px-3">
             <span class="text-xs font-semibold text-muted uppercase tracking-wider flex-1">Categories</span>
-            <button
+            <span 
               x-show="isAdminMode"
               @click="openCategoryModal()"
-              class="category-add"
+              class="inline-flex items-center justify-center w-7 h-7 rounded-full text-muted hover:text-accent cursor-pointer transition-colors"
               title="Add Category"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
-            </button>
+            </span>
           </div>
 
           <nav class="space-y-1">
@@ -88,7 +88,7 @@
               :class="activeCategory === null ? 'sidebar-item active' : 'sidebar-item'"
             >
               <span class="flex-1 truncate">All prompts</span>
-              <span class="badge" x-text="prompts.length"></span>
+              <span class="badge w-7 text-center" x-text="prompts.length"></span>
             </div>
 
             <!-- Dynamic Categories -->
@@ -99,11 +99,11 @@
                 class="group"
               >
                 <span class="flex-1 truncate" x-text="category.name"></span>
-                <span class="badge" x-text="getPromptCount(category.id)"></span>
+                <span class="badge w-7 text-center" x-text="getPromptCount(category.id)"></span>
                 <button
                   x-show="isAdminMode"
                   @click.stop="deleteCategory(category.id)"
-                  class="ml-2 opacity-0 group-hover:opacity-100 text-muted hover:text-red-400 transition-opacity"
+                  class="w-5 ml-1 opacity-0 group-hover:opacity-100 text-muted hover:text-red-400 transition-opacity flex items-center justify-center"
                   title="Delete Category"
                 >
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
