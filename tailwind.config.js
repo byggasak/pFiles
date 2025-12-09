@@ -4,13 +4,24 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["Karla", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
-        sidebar: "#020617", // slate-950
-        card: "#1e293b", // slate-800
-        surface: "#0f172a", // slate-900
+        // New color palette matching Figma design
+        background: "#0A0A0A",
+        sidebar: "#111111",
+        card: "#0D0D0D",
+        surface: "#0A0A0A",
+        border: "#1F1F1F",
+        "border-light": "#2A2A2A",
+        muted: "#6B6B6B",
+        // Teal accent
+        accent: {
+          DEFAULT: "#14B8A6",
+          hover: "#0D9488",
+          muted: "#14B8A6/20",
+        },
       },
       animation: {
         "fade-in": "fadeIn 0.2s ease-out",
@@ -40,4 +51,3 @@ module.exports = {
   },
   plugins: [],
 };
-

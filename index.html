@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pFiles — Prompt Templates</title>
+    <title>p_Files — Prompt Templates</title>
     <meta
       name="description"
       content="A personal, organized repository for prompt engineering templates"
@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
 
@@ -34,8 +34,8 @@
       x-transition:enter="transition ease-out duration-300"
       x-transition:leave="transition ease-in duration-200"
       :class="[
-        'fixed bottom-6 right-6 px-5 py-3 font-medium rounded-lg shadow-lg z-50 animate-toast-in',
-        toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'
+        'fixed bottom-6 right-6 px-5 py-3 font-semibold rounded-lg shadow-lg z-50 animate-toast-in',
+        toast.type === 'error' ? 'bg-red-500 text-white' : 'bg-accent text-black'
       ]"
       x-text="toast.message"
     ></div>
@@ -43,58 +43,36 @@
     <!-- Loading Overlay -->
     <div
       x-show="loading"
-      class="fixed inset-0 bg-surface/80 backdrop-blur-sm z-50 flex items-center justify-center"
+      class="fixed inset-0 bg-background/90 backdrop-blur-sm z-50 flex items-center justify-center"
     >
       <div class="flex flex-col items-center gap-4">
-        <div class="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-        <p class="text-slate-400" x-text="loadingMessage"></p>
+        <div class="w-10 h-10 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-muted" x-text="loadingMessage"></p>
       </div>
     </div>
 
     <div class="flex h-screen overflow-hidden">
       <!-- Sidebar -->
-      <aside
-        class="w-64 bg-sidebar border-r border-slate-800 flex flex-col shrink-0"
-      >
-        <!-- Logo (Triple-click to access admin) -->
-        <div class="p-6 border-b border-slate-800">
+      <aside class="w-56 bg-sidebar flex flex-col shrink-0">
+        <!-- Logo -->
+        <div class="px-6 py-8">
           <div 
-            class="flex items-center gap-3 cursor-default select-none"
+            class="cursor-default select-none"
             @click="handleLogoClick()"
-            title="pFiles"
+            title="p_Files"
           >
-            <div
-              class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center"
-            >
-              <svg
-                class="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-            </div>
-            <div>
-              <h1 class="text-lg font-bold text-white">pFiles</h1>
-              <p class="text-xs text-slate-500">Prompt Templates</p>
-            </div>
+            <h1 class="text-2xl font-bold text-white tracking-tight">/p_Files/</h1>
           </div>
         </div>
 
         <!-- Categories -->
-        <div class="flex-1 overflow-y-auto p-4">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Categories</span>
+        <div class="flex-1 overflow-y-auto px-4">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-semibold text-muted uppercase tracking-wider">Categories</span>
             <button
               x-show="isAdminMode"
               @click="openCategoryModal()"
-              class="p-1 text-slate-500 hover:text-indigo-400 hover:bg-slate-800 rounded transition-colors"
+              class="category-add"
               title="Add Category"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,10 +87,7 @@
               @click="activeCategory = null"
               :class="activeCategory === null ? 'sidebar-item active' : 'sidebar-item'"
             >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-              <span class="flex-1">All Prompts</span>
+              <span class="flex-1">All prompts</span>
               <span class="badge" x-text="prompts.length"></span>
             </div>
 
@@ -123,16 +98,12 @@
                 :class="activeCategory === category.id ? 'sidebar-item active' : 'sidebar-item'"
                 class="group"
               >
-                <div
-                  class="w-2.5 h-2.5 rounded-full"
-                  :style="`background-color: ${category.color}`"
-                ></div>
                 <span class="flex-1 truncate" x-text="category.name"></span>
                 <span class="badge" x-text="getPromptCount(category.id)"></span>
                 <button
                   x-show="isAdminMode"
                   @click.stop="deleteCategory(category.id)"
-                  class="opacity-0 group-hover:opacity-100 p-1 text-slate-500 hover:text-red-400 transition-opacity"
+                  class="opacity-0 group-hover:opacity-100 p-1 text-muted hover:text-red-400 transition-opacity"
                   title="Delete Category"
                 >
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -145,16 +116,25 @@
         </div>
 
         <!-- Sidebar Footer -->
-        <div class="p-4 border-t border-slate-800 space-y-2">
-          <!-- Admin Mode Indicator (only visible when in admin mode) -->
-          <div x-show="isAdminMode" class="flex items-center gap-2 px-3 py-2 bg-indigo-600/10 border border-indigo-500/30 rounded-lg">
-            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-            <span class="text-xs text-indigo-400 font-medium">Admin Mode</span>
+        <div class="p-4">
+          <!-- Admin Mode Link (when not in admin mode) -->
+          <button
+            x-show="!isAdminMode"
+            @click="openAdminModal()"
+            class="text-sm italic underline transition-colors"
+            style="color: #161616;"
+            onmouseover="this.style.color='#ACACAC'"
+            onmouseout="this.style.color='#161616'"
+          >
+            Admin mode
+          </button>
+          
+          <!-- Admin Mode Active (when in admin mode) -->
+          <div x-show="isAdminMode" class="flex items-center gap-2">
+            <span class="text-sm italic" style="color: #ACACAC;">Admin mode</span>
             <button 
               @click="exitAdminMode()" 
-              class="ml-auto text-indigo-400 hover:text-indigo-300"
+              class="text-muted hover:text-white transition-colors"
               title="Exit Admin Mode"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -162,21 +142,18 @@
               </svg>
             </button>
           </div>
-          <p class="text-xs text-slate-600 text-center">
-            Data stored on GitHub
-          </p>
         </div>
       </aside>
 
       <!-- Main Content -->
-      <main class="flex-1 flex flex-col overflow-hidden">
+      <main class="flex-1 flex flex-col overflow-hidden bg-background">
         <!-- Header -->
-        <header class="bg-surface border-b border-slate-800 px-6 py-4">
+        <header class="px-8 py-6">
           <div class="flex items-center gap-4">
             <!-- Search -->
             <div class="relative flex-1 max-w-md">
               <svg
-                class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500"
+                class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -198,14 +175,6 @@
 
             <div class="flex-1"></div>
 
-            <!-- Sync Status (only in admin mode) -->
-            <div x-show="isAdminMode && isConfigured" class="flex items-center gap-2 text-sm text-slate-500">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-              <span>Synced with GitHub</span>
-            </div>
-
             <!-- Add Prompt Button (only in admin mode) -->
             <button
               x-show="isAdminMode"
@@ -215,14 +184,14 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
-              <span>Add Prompt</span>
+              <span>Add prompt</span>
             </button>
           </div>
         </header>
 
         <!-- Content Area -->
-        <div class="flex-1 overflow-y-auto p-6">
-          <!-- Admin Token Required Banner (only in admin mode without token) -->
+        <div class="flex-1 overflow-y-auto px-8 pb-8">
+          <!-- Admin Token Required Banner -->
           <template x-if="isAdminMode && !isConfigured">
             <div class="mb-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
               <div class="flex items-start gap-3">
@@ -231,7 +200,7 @@
                 </svg>
                 <div>
                   <h3 class="font-semibold text-amber-500">GitHub Token Required</h3>
-                  <p class="text-sm text-slate-400 mt-1">To add and manage prompts, please configure your GitHub Personal Access Token.</p>
+                  <p class="text-sm text-muted mt-1">To add and manage prompts, please configure your GitHub Personal Access Token.</p>
                   <button @click="openAdminModal()" class="mt-3 text-sm font-medium text-amber-500 hover:text-amber-400">
                     Configure Token →
                   </button>
@@ -243,13 +212,13 @@
           <!-- Empty State -->
           <template x-if="filteredPrompts.length === 0 && !loading">
             <div class="flex flex-col items-center justify-center h-full text-center">
-              <div class="w-20 h-20 bg-slate-800 rounded-2xl flex items-center justify-center mb-6">
-                <svg class="w-10 h-10 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="w-20 h-20 bg-border rounded-2xl flex items-center justify-center mb-6">
+                <svg class="w-10 h-10 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <h3 class="text-xl font-semibold text-slate-300 mb-2">No prompts found</h3>
-              <p class="text-slate-500 mb-6 max-w-sm">
+              <h3 class="text-xl font-semibold text-white mb-2">No prompts found</h3>
+              <p class="text-muted mb-6 max-w-sm">
                 <span x-show="searchQuery">No prompts match your search. Try a different query.</span>
                 <span x-show="!searchQuery && activeCategory">This category is empty.</span>
                 <span x-show="!searchQuery && !activeCategory">No prompt templates available yet.</span>
@@ -269,50 +238,45 @@
               <template x-for="prompt in filteredPrompts" :key="prompt.id">
                 <article class="card flex flex-col">
                   <!-- Card Header -->
-                  <div class="p-4 pb-3 border-b border-slate-700/50">
-                    <div class="flex items-start justify-between gap-3">
-                      <div class="flex-1 min-w-0">
-                        <h3 class="font-semibold text-slate-100 truncate" x-text="prompt.title"></h3>
-                        <template x-if="getCategoryById(prompt.categoryId)">
-                          <div class="flex items-center gap-2 mt-2">
-                            <div
-                              class="w-2 h-2 rounded-full"
-                              :style="`background-color: ${getCategoryById(prompt.categoryId)?.color}`"
-                            ></div>
-                            <span class="text-xs text-slate-500" x-text="getCategoryById(prompt.categoryId)?.name"></span>
-                          </div>
-                        </template>
-                      </div>
-                      <button
-                        x-show="isAdminMode"
-                        @click="deletePrompt(prompt.id)"
-                        class="btn-danger p-1.5"
-                        title="Delete Prompt"
-                      >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
+                  <div class="p-4 pb-3 flex items-start justify-between gap-3">
+                    <div class="flex-1 min-w-0">
+                      <h3 class="font-semibold text-white leading-tight" x-text="prompt.title"></h3>
+                      <template x-if="getCategoryById(prompt.categoryId)">
+                        <span class="text-xs text-muted mt-1 block" x-text="getCategoryById(prompt.categoryId)?.name"></span>
+                      </template>
                     </div>
+                    <button
+                      x-show="isAdminMode"
+                      @click="deletePrompt(prompt.id)"
+                      class="btn-danger"
+                      title="Delete Prompt"
+                    >
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
                   </div>
 
                   <!-- Card Content -->
-                  <div class="p-4 flex-1">
+                  <div class="px-4 flex-1">
                     <div class="code-block h-32 overflow-y-auto">
-                      <pre class="whitespace-pre-wrap break-words" x-text="prompt.content"></pre>
+                      <pre class="whitespace-pre-wrap break-words text-sm" x-text="prompt.content"></pre>
                     </div>
                   </div>
 
-                  <!-- Card Footer -->
-                  <div class="p-4 pt-0">
+                  <!-- Card Footer - Two buttons side by side -->
+                  <div class="p-4 flex gap-3">
+                    <button
+                      @click="expandPrompt(prompt)"
+                      class="btn-secondary flex-1"
+                    >
+                      Expand
+                    </button>
                     <button
                       @click="copyToClipboard(prompt.content)"
-                      class="btn-secondary w-full"
+                      class="btn-secondary flex-1"
                     >
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                      </svg>
-                      <span>Copy to Clipboard</span>
+                      Copy
                     </button>
                   </div>
                 </article>
@@ -336,15 +300,15 @@
       @click.self="closePromptModal()"
     >
       <div class="modal-content" @click.stop>
-        <div class="p-6 border-b border-slate-700">
+        <div class="p-6 border-b border-border">
           <h2 class="text-xl font-bold text-white">Add New Prompt</h2>
-          <p class="text-sm text-slate-400 mt-1">Create a new prompt template</p>
+          <p class="text-sm text-muted mt-1">Create a new prompt template</p>
         </div>
 
         <form @submit.prevent="savePrompt()" class="p-6 space-y-5">
           <!-- Title -->
           <div>
-            <label class="block text-sm font-medium text-slate-300 mb-2">Title</label>
+            <label class="block text-sm font-medium text-white mb-2">Title</label>
             <input
               type="text"
               x-model="promptModal.form.title"
@@ -356,7 +320,7 @@
 
           <!-- Category -->
           <div>
-            <label class="block text-sm font-medium text-slate-300 mb-2">Category</label>
+            <label class="block text-sm font-medium text-white mb-2">Category</label>
             <select x-model="promptModal.form.categoryId" class="input-field">
               <option value="">No Category</option>
               <template x-for="category in categories" :key="category.id">
@@ -367,7 +331,7 @@
 
           <!-- Content -->
           <div>
-            <label class="block text-sm font-medium text-slate-300 mb-2">Prompt Content</label>
+            <label class="block text-sm font-medium text-white mb-2">Prompt Content</label>
             <textarea
               x-model="promptModal.form.content"
               placeholder="Enter your prompt template here..."
@@ -383,16 +347,54 @@
               Cancel
             </button>
             <button type="submit" class="btn-primary flex-1" :disabled="saving">
-              <svg x-show="saving" class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              <svg x-show="!saving" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
               <span x-text="saving ? 'Saving...' : 'Save Prompt'"></span>
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Expand Prompt Modal -->
+    <div
+      x-show="expandModal.open"
+      x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="opacity-0"
+      x-transition:enter-end="opacity-100"
+      x-transition:leave="transition ease-in duration-150"
+      x-transition:leave-start="opacity-100"
+      x-transition:leave-end="opacity-0"
+      class="modal-overlay"
+      @click.self="closeExpandModal()"
+    >
+      <div class="modal-content max-w-2xl" @click.stop>
+        <div class="p-6 border-b border-border flex items-start justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-white" x-text="expandModal.prompt?.title"></h2>
+            <template x-if="expandModal.prompt && getCategoryById(expandModal.prompt.categoryId)">
+              <p class="text-sm text-muted mt-1" x-text="getCategoryById(expandModal.prompt.categoryId)?.name"></p>
+            </template>
+          </div>
+          <button @click="closeExpandModal()" class="btn-ghost">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="p-6">
+          <div class="code-block max-h-96 overflow-y-auto">
+            <pre class="whitespace-pre-wrap break-words text-sm" x-text="expandModal.prompt?.content"></pre>
+          </div>
+        </div>
+
+        <div class="p-6 pt-0 flex gap-3">
+          <button @click="closeExpandModal()" class="btn-secondary flex-1">
+            Close
+          </button>
+          <button @click="copyToClipboard(expandModal.prompt?.content)" class="btn-primary flex-1">
+            Copy to Clipboard
+          </button>
+        </div>
       </div>
     </div>
 
@@ -409,15 +411,15 @@
       @click.self="closeCategoryModal()"
     >
       <div class="modal-content" @click.stop>
-        <div class="p-6 border-b border-slate-700">
+        <div class="p-6 border-b border-border">
           <h2 class="text-xl font-bold text-white">Add New Category</h2>
-          <p class="text-sm text-slate-400 mt-1">Organize your prompts with categories</p>
+          <p class="text-sm text-muted mt-1">Organize your prompts with categories</p>
         </div>
 
         <form @submit.prevent="saveCategory()" class="p-6 space-y-5">
           <!-- Name -->
           <div>
-            <label class="block text-sm font-medium text-slate-300 mb-2">Category Name</label>
+            <label class="block text-sm font-medium text-white mb-2">Category Name</label>
             <input
               type="text"
               x-model="categoryModal.form.name"
@@ -427,34 +429,12 @@
             />
           </div>
 
-          <!-- Color -->
-          <div>
-            <label class="block text-sm font-medium text-slate-300 mb-2">Color</label>
-            <div class="flex gap-3 flex-wrap">
-              <template x-for="color in colorOptions" :key="color">
-                <button
-                  type="button"
-                  @click="categoryModal.form.color = color"
-                  :class="categoryModal.form.color === color ? 'ring-2 ring-offset-2 ring-offset-slate-800 ring-white scale-110' : ''"
-                  class="w-8 h-8 rounded-full transition-transform hover:scale-110"
-                  :style="`background-color: ${color}`"
-                ></button>
-              </template>
-            </div>
-          </div>
-
           <!-- Actions -->
           <div class="flex gap-3 pt-2">
             <button type="button" @click="closeCategoryModal()" class="btn-secondary flex-1">
               Cancel
             </button>
             <button type="submit" class="btn-primary flex-1" :disabled="saving">
-              <svg x-show="saving" class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              <svg x-show="!saving" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
               <span x-text="saving ? 'Saving...' : 'Save Category'"></span>
             </button>
           </div>
@@ -462,7 +442,7 @@
       </div>
     </div>
 
-    <!-- Admin Access Modal (Password + Token) -->
+    <!-- Admin Access Modal -->
     <div
       x-show="adminModal.open"
       x-transition:enter="transition ease-out duration-200"
@@ -475,16 +455,16 @@
       @click.self="closeAdminModal()"
     >
       <div class="modal-content max-w-md" @click.stop>
-        <div class="p-6 border-b border-slate-700">
+        <div class="p-6 border-b border-border">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-indigo-600/20 rounded-xl flex items-center justify-center">
-              <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-10 h-10 bg-accent/20 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
             <div>
               <h2 class="text-xl font-bold text-white">Admin Access</h2>
-              <p class="text-sm text-slate-400">Enter credentials to manage prompts</p>
+              <p class="text-sm text-muted">Enter credentials to manage prompts</p>
             </div>
           </div>
         </div>
@@ -492,7 +472,7 @@
         <form @submit.prevent="handleAdminAuth()" class="p-6 space-y-5">
           <!-- Admin Password -->
           <div>
-            <label class="block text-sm font-medium text-slate-300 mb-2">Admin Password</label>
+            <label class="block text-sm font-medium text-white mb-2">Admin Password</label>
             <input
               type="password"
               x-model="adminModal.form.password"
@@ -501,7 +481,7 @@
               required
               :disabled="adminModal.authenticated"
             />
-            <div x-show="adminModal.authenticated" class="flex items-center gap-2 mt-2 text-emerald-400 text-sm">
+            <div x-show="adminModal.authenticated" class="flex items-center gap-2 mt-2 text-accent text-sm">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
@@ -510,29 +490,28 @@
             <p x-show="adminModal.error" class="text-red-400 text-sm mt-2" x-text="adminModal.error"></p>
           </div>
 
-          <!-- GitHub Token (only shown after password is verified) -->
+          <!-- GitHub Token -->
           <div x-show="adminModal.authenticated" x-transition>
-            <label class="block text-sm font-medium text-slate-300 mb-2">GitHub Personal Access Token</label>
+            <label class="block text-sm font-medium text-white mb-2">GitHub Personal Access Token</label>
             <input
               type="password"
               x-model="adminModal.form.token"
               placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
               class="input-field font-mono"
             />
-            <p class="text-xs text-slate-500 mt-2">
+            <p class="text-xs text-muted mt-2">
               Create a token at
-              <a href="https://github.com/settings/tokens/new?scopes=repo&description=pFiles" target="_blank" class="text-indigo-400 hover:text-indigo-300">
+              <a href="https://github.com/settings/tokens/new?scopes=repo&description=pFiles" target="_blank" class="text-accent hover:text-accent-hover">
                 GitHub Settings → Tokens
               </a>
-              with <code class="px-1.5 py-0.5 bg-slate-700 rounded">repo</code> scope.
+              with <code class="px-1.5 py-0.5 bg-border rounded text-white">repo</code> scope.
             </p>
             
-            <!-- Current Status -->
-            <div x-show="isConfigured" class="flex items-center gap-2 mt-3 p-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
-              <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div x-show="isConfigured" class="flex items-center gap-2 mt-3 p-2 bg-accent/10 border border-accent/30 rounded-lg">
+              <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
-              <span class="text-sm text-emerald-400">Token configured</span>
+              <span class="text-sm text-accent">Token configured</span>
             </div>
           </div>
 
@@ -563,8 +542,9 @@
             branch: "main",
           },
 
-          // Admin Configuration
-          ADMIN_PASSWORD: "pFiles!admin",
+          // Admin Configuration - SHA-256 hash of the password (not plaintext)
+          // To generate a new hash: console.log(await this.hashPassword('your-password'))
+          ADMIN_PASSWORD_HASH: "0693ba199b2e89d5ffdec38e6fd8b434b133b1c56db1ec14d45706df3598e51c",
 
           // State
           prompts: [],
@@ -581,12 +561,6 @@
           logoClickCount: 0,
           logoClickTimer: null,
 
-          // Color options for categories
-          colorOptions: [
-            "#6366f1", "#8b5cf6", "#ec4899", "#ef4444", "#f97316",
-            "#eab308", "#22c55e", "#14b8a6", "#06b6d4", "#3b82f6",
-          ],
-
           // Toast state
           toast: {
             show: false,
@@ -601,13 +575,17 @@
           },
           categoryModal: {
             open: false,
-            form: { name: "", color: "#6366f1" },
+            form: { name: "" },
           },
           adminModal: {
             open: false,
             authenticated: false,
             error: "",
             form: { password: "", token: "" },
+          },
+          expandModal: {
+            open: false,
+            prompt: null,
           },
 
           // Computed
@@ -637,21 +615,19 @@
 
           // Initialize
           async init() {
-            // Check if admin session exists (sessionStorage - expires when browser closes)
             this.isAdminMode = sessionStorage.getItem("pfiles_admin") === "true";
             await this.loadData();
           },
 
           // Handle keyboard shortcuts
           handleKeydown(event) {
-            // Ctrl+Shift+A or Cmd+Shift+A to open admin modal
             if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "A") {
               event.preventDefault();
               this.openAdminModal();
             }
           },
 
-          // Handle logo click (triple-click to access admin)
+          // Handle logo click (5-click to access admin)
           handleLogoClick() {
             this.logoClickCount++;
             
@@ -684,10 +660,18 @@
             this.adminModal.error = "";
           },
 
-          handleAdminAuth() {
-            // Step 1: Verify password
+          async hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+          },
+
+          async handleAdminAuth() {
             if (!this.adminModal.authenticated) {
-              if (this.adminModal.form.password === this.ADMIN_PASSWORD) {
+              const inputHash = await this.hashPassword(this.adminModal.form.password);
+              if (inputHash === this.ADMIN_PASSWORD_HASH) {
                 this.adminModal.authenticated = true;
                 this.adminModal.error = "";
               } else {
@@ -696,13 +680,11 @@
               return;
             }
 
-            // Step 2: Save token and enter admin mode
             const token = this.adminModal.form.token.trim();
             if (token) {
               localStorage.setItem("pfiles_github_token", token);
             }
 
-            // Set admin session
             sessionStorage.setItem("pfiles_admin", "true");
             this.isAdminMode = true;
             
@@ -859,6 +841,17 @@
             }
           },
 
+          // Expand prompt
+          expandPrompt(prompt) {
+            this.expandModal.prompt = prompt;
+            this.expandModal.open = true;
+          },
+
+          closeExpandModal() {
+            this.expandModal.open = false;
+            this.expandModal.prompt = null;
+          },
+
           // Category CRUD
           openCategoryModal() {
             if (!this.isConfigured) {
@@ -866,7 +859,7 @@
               this.openAdminModal();
               return;
             }
-            this.categoryModal.form = { name: "", color: "#6366f1" };
+            this.categoryModal.form = { name: "" };
             this.categoryModal.open = true;
           },
 
@@ -880,7 +873,6 @@
             const newCategory = {
               id: this.categoryModal.form.name.toLowerCase().replace(/\s+/g, "-"),
               name: this.categoryModal.form.name.trim(),
-              color: this.categoryModal.form.color,
             };
 
             this.categories.push(newCategory);

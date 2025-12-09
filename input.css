@@ -8,126 +8,131 @@
   }
 
   body {
-    @apply bg-surface text-slate-200 antialiased;
+    @apply bg-background text-white antialiased;
+    font-feature-settings: "ss01", "ss02";
   }
 
   ::selection {
-    @apply bg-indigo-600/40;
+    @apply bg-accent/30;
   }
 
   /* Custom scrollbar */
   ::-webkit-scrollbar {
-    @apply w-2;
+    @apply w-1.5;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-slate-800/50;
+    @apply bg-transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-600 rounded-full hover:bg-slate-500;
+    @apply bg-border-light rounded-full hover:bg-muted;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 
-           bg-indigo-600 text-white font-medium rounded-lg
-           hover:bg-indigo-500 active:bg-indigo-700
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 
+           bg-accent text-black font-semibold rounded-lg
+           hover:bg-accent-hover active:bg-accent
            transition-colors duration-150 ease-out
-           focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-surface;
+           focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5
-           bg-slate-700 text-slate-200 font-medium rounded-lg
-           hover:bg-slate-600 active:bg-slate-800
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2
+           bg-border text-muted font-medium rounded-lg
+           hover:bg-border-light hover:text-white
            transition-colors duration-150 ease-out
-           focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-surface;
+           focus:outline-none focus:ring-2 focus:ring-border-light focus:ring-offset-2 focus:ring-offset-background;
   }
 
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 px-3 py-2
-           text-slate-400 rounded-lg
-           hover:bg-slate-800 hover:text-slate-200
+           text-muted rounded-lg
+           hover:bg-border hover:text-white
            transition-colors duration-150 ease-out
-           focus:outline-none focus:ring-2 focus:ring-slate-600;
+           focus:outline-none focus:ring-2 focus:ring-border;
   }
 
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 px-3 py-2
-           text-red-400 rounded-lg
-           hover:bg-red-500/10 hover:text-red-300
+    @apply inline-flex items-center justify-center gap-2 p-2
+           text-muted rounded-lg
+           hover:bg-red-500/10 hover:text-red-400
            transition-colors duration-150 ease-out;
   }
 
   .input-field {
-    @apply w-full px-4 py-2.5 bg-slate-800 border border-slate-700 
-           text-slate-200 placeholder-slate-500 rounded-lg
-           focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+    @apply w-full px-4 py-2.5 bg-background border border-border 
+           text-white placeholder-muted rounded-lg
+           focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent
            transition-colors duration-150;
   }
 
   .textarea-field {
-    @apply w-full px-4 py-3 bg-slate-800 border border-slate-700 
-           text-slate-200 placeholder-slate-500 rounded-lg
+    @apply w-full px-4 py-3 bg-background border border-border 
+           text-white placeholder-muted rounded-lg
            font-mono text-sm leading-relaxed resize-none
-           focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+           focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent
            transition-colors duration-150;
   }
 
   .card {
-    @apply bg-card rounded-xl border border-slate-700/50 
-           hover:border-slate-600 transition-all duration-200
+    @apply bg-card rounded-xl
+           transition-all duration-200
            animate-slide-up;
   }
 
   .sidebar-item {
-    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg
-           text-slate-400 cursor-pointer
-           hover:bg-slate-800/70 hover:text-slate-200
+    @apply flex items-center gap-3 px-3 py-2 rounded-lg
+           text-muted cursor-pointer
+           hover:text-white
            transition-colors duration-150;
   }
 
   .sidebar-item.active {
-    @apply bg-indigo-600/20 text-indigo-400 border-l-2 border-indigo-500;
+    @apply text-accent;
   }
 
   .code-block {
-    @apply p-4 bg-slate-900/80 rounded-lg border border-slate-700/50
-           font-mono text-sm text-slate-300 leading-relaxed
+    @apply p-4 bg-black rounded-lg
+           font-mono text-sm text-neutral-300 leading-relaxed
            overflow-hidden;
   }
 
   .modal-overlay {
-    @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-50
+    @apply fixed inset-0 bg-black/80 backdrop-blur-sm z-50
            flex items-center justify-center p-4;
   }
 
   .modal-content {
-    @apply bg-slate-800 rounded-2xl border border-slate-700 
+    @apply bg-sidebar rounded-2xl border border-border 
            shadow-2xl w-full max-w-lg
            animate-slide-up;
   }
 
   .toast {
     @apply fixed bottom-6 right-6 px-5 py-3 
-           bg-emerald-600 text-white font-medium rounded-lg
-           shadow-lg shadow-emerald-900/30
+           bg-accent text-black font-semibold rounded-lg
+           shadow-lg shadow-accent/20
            animate-toast-in z-50;
   }
 
-  .toast.hiding {
-    @apply animate-toast-out;
+  .toast.error {
+    @apply bg-red-500 text-white;
   }
 
   .badge {
-    @apply inline-flex items-center px-2.5 py-1 rounded-full 
-           text-xs font-medium bg-slate-700 text-slate-300;
+    @apply inline-flex items-center justify-center min-w-[28px] px-2 py-0.5 rounded-full 
+           text-sm font-medium bg-border text-muted;
   }
 
-  .badge-indigo {
-    @apply bg-indigo-600/20 text-indigo-400;
+  .badge-accent {
+    @apply bg-accent/20 text-accent;
+  }
+
+  /* Category add button */
+  .category-add {
+    @apply p-1 text-muted hover:text-accent transition-colors;
   }
 }
-
