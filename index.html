@@ -18,7 +18,7 @@
     />
 
     <!-- Built CSS -->
-    <link rel="stylesheet" href="dist/output.css?v=7" />
+    <link rel="stylesheet" href="dist/output.css?v=8" />
 
     <!-- Alpine.js -->
     <script
@@ -116,12 +116,12 @@
         </div>
 
         <!-- Sidebar Footer -->
-        <div class="p-4 flex flex-col items-center">
+        <div class="p-4">
           <!-- Admin Mode Link (when not in admin mode) -->
           <button
             x-show="!isAdminMode"
             @click="openAdminModal()"
-            class="text-sm italic underline transition-colors"
+            class="w-full text-sm italic underline transition-colors text-center"
             style="color: #161616;"
             onmouseover="this.style.color='#ACACAC'"
             onmouseout="this.style.color='#161616'"
@@ -130,7 +130,7 @@
           </button>
           
           <!-- Admin Mode Active (when in admin mode) -->
-          <div x-show="isAdminMode" class="flex items-center gap-2">
+          <div x-show="isAdminMode" class="flex items-center justify-center gap-2">
             <span class="text-sm italic" style="color: #ACACAC;">Admin mode</span>
             <button 
               @click="exitAdminMode()" 
