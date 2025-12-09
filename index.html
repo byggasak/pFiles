@@ -18,7 +18,7 @@
     />
 
     <!-- Built CSS -->
-    <link rel="stylesheet" href="dist/output.css?v=6" />
+    <link rel="stylesheet" href="dist/output.css?v=7" />
 
     <!-- Alpine.js -->
     <script
@@ -116,7 +116,7 @@
         </div>
 
         <!-- Sidebar Footer -->
-        <div class="p-4 text-center">
+        <div class="p-4 flex flex-col items-center">
           <!-- Admin Mode Link (when not in admin mode) -->
           <button
             x-show="!isAdminMode"
@@ -130,7 +130,7 @@
           </button>
           
           <!-- Admin Mode Active (when in admin mode) -->
-          <div x-show="isAdminMode" class="inline-flex items-center gap-2">
+          <div x-show="isAdminMode" class="flex items-center gap-2">
             <span class="text-sm italic" style="color: #ACACAC;">Admin mode</span>
             <button 
               @click="exitAdminMode()" 
