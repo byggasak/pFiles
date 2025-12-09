@@ -2,13 +2,6 @@
   "categories": [],
   "prompts": [
     {
-      "id": "1765279983403",
-      "title": "test2",
-      "content": "flhsdjflksag",
-      "categoryId": null,
-      "createdAt": "2025-12-09T11:33:03.403Z"
-    },
-    {
       "id": "1733744400000",
       "title": "Code Review Assistant",
       "content": "You are an expert code reviewer. Analyze the following code and provide feedback on:\n\n1. Code quality and readability\n2. Potential bugs or edge cases\n3. Performance considerations\n4. Security vulnerabilities\n5. Best practices and improvements\n\nBe constructive and specific in your feedback.",
