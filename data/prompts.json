@@ -4,11 +4,6 @@
       "id": "development",
       "name": "Development",
       "color": "#22c55e"
-    },
-    {
-      "id": "analysis",
-      "name": "Analysis",
-      "color": "#06b6d4"
     }
   ],
   "prompts": [
