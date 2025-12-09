@@ -1,4 +1,9 @@
 {
-  "categories": [],
+  "categories": [
+    {
+      "id": "design",
+      "name": "Design"
+    }
+  ],
   "prompts": []
 }
