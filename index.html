@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pFiles — Prompt Templates</title>
+    <meta
+      name="description"
+      content="A personal, organized repository for prompt engineering templates"
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Built CSS -->
+    <link rel="stylesheet" href="dist/output.css" />
+
+    <!-- Alpine.js -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+  </head>
+
+  <body x-data="pFilesApp()" x-init="init()">
+    <!-- Toast Notification -->
+    <div
+      x-show="toast.show"
+      x-transition:enter="transition ease-out duration-300"
+      x-transition:leave="transition ease-in duration-200"
+      :class="toast.hiding ? 'toast hiding' : 'toast'"
+      x-text="toast.message"
+    ></div>
+
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <aside
+        class="w-64 bg-sidebar border-r border-slate-800 flex flex-col shrink-0"
+      >
+        <!-- Logo -->
+        <div class="p-6 border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-lg font-bold text-white">pFiles</h1>
+              <p class="text-xs text-slate-500">Prompt Templates</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="flex-1 overflow-y-auto p-4">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Categories</span>
+            <button
+              @click="openCategoryModal()"
+              class="p-1 text-slate-500 hover:text-indigo-400 hover:bg-slate-800 rounded transition-colors"
+              title="Add Category"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+          </div>
+
+          <nav class="space-y-1">
+            <!-- All Prompts -->
+            <div
+              @click="activeCategory = null"
+              :class="activeCategory === null ? 'sidebar-item active' : 'sidebar-item'"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              <span class="flex-1">All Prompts</span>
+              <span class="badge" x-text="prompts.length"></span>
+            </div>
+
+            <!-- Dynamic Categories -->
+            <template x-for="category in categories" :key="category.id">
+              <div
+                @click="activeCategory = category.id"
+                :class="activeCategory === category.id ? 'sidebar-item active' : 'sidebar-item'"
+                class="group"
+              >
+                <div
+                  class="w-2.5 h-2.5 rounded-full"
+                  :style="`background-color: ${category.color}`"
+                ></div>
+                <span class="flex-1 truncate" x-text="category.name"></span>
+                <span class="badge" x-text="getPromptCount(category.id)"></span>
+                <button
+                  @click.stop="deleteCategory(category.id)"
+                  class="opacity-0 group-hover:opacity-100 p-1 text-slate-500 hover:text-red-400 transition-opacity"
+                  title="Delete Category"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </template>
+          </nav>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="p-4 border-t border-slate-800">
+          <p class="text-xs text-slate-600 text-center">
+            Data stored locally in your browser
+          </p>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header class="bg-surface border-b border-slate-800 px-6 py-4">
+          <div class="flex items-center gap-4">
+            <!-- Search -->
+            <div class="relative flex-1 max-w-md">
+              <svg
+                class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+              <input
+                type="text"
+                x-model="searchQuery"
+                placeholder="Search prompts..."
+                class="input-field pl-10"
+              />
+            </div>
+
+            <div class="flex-1"></div>
+
+            <!-- Add Prompt Button -->
+            <button @click="openPromptModal()" class="btn-primary">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              <span>Add Prompt</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="flex-1 overflow-y-auto p-6">
+          <!-- Empty State -->
+          <template x-if="filteredPrompts.length === 0">
+            <div class="flex flex-col items-center justify-center h-full text-center">
+              <div class="w-20 h-20 bg-slate-800 rounded-2xl flex items-center justify-center mb-6">
+                <svg class="w-10 h-10 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-slate-300 mb-2">No prompts found</h3>
+              <p class="text-slate-500 mb-6 max-w-sm">
+                <span x-show="searchQuery">No prompts match your search. Try a different query.</span>
+                <span x-show="!searchQuery && activeCategory">This category is empty. Add your first prompt!</span>
+                <span x-show="!searchQuery && !activeCategory">Start building your prompt library by adding your first template.</span>
+              </p>
+              <button @click="openPromptModal()" class="btn-primary" x-show="!searchQuery">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>Create First Prompt</span>
+              </button>
+            </div>
+          </template>
+
+          <!-- Prompts Grid -->
+          <template x-if="filteredPrompts.length > 0">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+              <template x-for="prompt in filteredPrompts" :key="prompt.id">
+                <article class="card flex flex-col">
+                  <!-- Card Header -->
+                  <div class="p-4 pb-3 border-b border-slate-700/50">
+                    <div class="flex items-start justify-between gap-3">
+                      <div class="flex-1 min-w-0">
+                        <h3 class="font-semibold text-slate-100 truncate" x-text="prompt.title"></h3>
+                        <template x-if="getCategoryById(prompt.categoryId)">
+                          <div class="flex items-center gap-2 mt-2">
+                            <div
+                              class="w-2 h-2 rounded-full"
+                              :style="`background-color: ${getCategoryById(prompt.categoryId)?.color}`"
+                            ></div>
+                            <span class="text-xs text-slate-500" x-text="getCategoryById(prompt.categoryId)?.name"></span>
+                          </div>
+                        </template>
+                      </div>
+                      <button
+                        @click="deletePrompt(prompt.id)"
+                        class="btn-danger p-1.5"
+                        title="Delete Prompt"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Card Content -->
+                  <div class="p-4 flex-1">
+                    <div class="code-block h-32 overflow-y-auto">
+                      <pre class="whitespace-pre-wrap break-words" x-text="prompt.content"></pre>
+                    </div>
+                  </div>
+
+                  <!-- Card Footer -->
+                  <div class="p-4 pt-0">
+                    <button
+                      @click="copyToClipboard(prompt.content)"
+                      class="btn-secondary w-full"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                      </svg>
+                      <span>Copy to Clipboard</span>
+                    </button>
+                  </div>
+                </article>
+              </template>
+            </div>
+          </template>
+        </div>
+      </main>
+    </div>
+
+    <!-- Add/Edit Prompt Modal -->
+    <div
+      x-show="promptModal.open"
+      x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="opacity-0"
+      x-transition:enter-end="opacity-100"
+      x-transition:leave="transition ease-in duration-150"
+      x-transition:leave-start="opacity-100"
+      x-transition:leave-end="opacity-0"
+      class="modal-overlay"
+      @click.self="closePromptModal()"
+    >
+      <div class="modal-content" @click.stop>
+        <div class="p-6 border-b border-slate-700">
+          <h2 class="text-xl font-bold text-white">Add New Prompt</h2>
+          <p class="text-sm text-slate-400 mt-1">Create a new prompt template</p>
+        </div>
+
+        <form @submit.prevent="savePrompt()" class="p-6 space-y-5">
+          <!-- Title -->
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">Title</label>
+            <input
+              type="text"
+              x-model="promptModal.form.title"
+              placeholder="e.g., Code Review Assistant"
+              class="input-field"
+              required
+            />
+          </div>
+
+          <!-- Category -->
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">Category</label>
+            <select x-model="promptModal.form.categoryId" class="input-field">
+              <option value="">No Category</option>
+              <template x-for="category in categories" :key="category.id">
+                <option :value="category.id" x-text="category.name"></option>
+              </template>
+            </select>
+          </div>
+
+          <!-- Content -->
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">Prompt Content</label>
+            <textarea
+              x-model="promptModal.form.content"
+              placeholder="Enter your prompt template here..."
+              rows="8"
+              class="textarea-field"
+              required
+            ></textarea>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex gap-3 pt-2">
+            <button type="button" @click="closePromptModal()" class="btn-secondary flex-1">
+              Cancel
+            </button>
+            <button type="submit" class="btn-primary flex-1">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Save Prompt</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div
+      x-show="categoryModal.open"
+      x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="opacity-0"
+      x-transition:enter-end="opacity-100"
+      x-transition:leave="transition ease-in duration-150"
+      x-transition:leave-start="opacity-100"
+      x-transition:leave-end="opacity-0"
+      class="modal-overlay"
+      @click.self="closeCategoryModal()"
+    >
+      <div class="modal-content" @click.stop>
+        <div class="p-6 border-b border-slate-700">
+          <h2 class="text-xl font-bold text-white">Add New Category</h2>
+          <p class="text-sm text-slate-400 mt-1">Organize your prompts with categories</p>
+        </div>
+
+        <form @submit.prevent="saveCategory()" class="p-6 space-y-5">
+          <!-- Name -->
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">Category Name</label>
+            <input
+              type="text"
+              x-model="categoryModal.form.name"
+              placeholder="e.g., Development, Writing, Analysis"
+              class="input-field"
+              required
+            />
+          </div>
+
+          <!-- Color -->
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">Color</label>
+            <div class="flex gap-3 flex-wrap">
+              <template x-for="color in colorOptions" :key="color">
+                <button
+                  type="button"
+                  @click="categoryModal.form.color = color"
+                  :class="categoryModal.form.color === color ? 'ring-2 ring-offset-2 ring-offset-slate-800 ring-white scale-110' : ''"
+                  class="w-8 h-8 rounded-full transition-transform hover:scale-110"
+                  :style="`background-color: ${color}`"
+                ></button>
+              </template>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex gap-3 pt-2">
+            <button type="button" @click="closeCategoryModal()" class="btn-secondary flex-1">
+              Cancel
+            </button>
+            <button type="submit" class="btn-primary flex-1">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Save Category</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function pFilesApp() {
+        return {
+          // Data
+          prompts: [],
+          categories: [],
+          searchQuery: "",
+          activeCategory: null,
+
+          // Color options for categories
+          colorOptions: [
+            "#6366f1", // indigo
+            "#8b5cf6", // violet
+            "#ec4899", // pink
+            "#ef4444", // red
+            "#f97316", // orange
+            "#eab308", // yellow
+            "#22c55e", // green
+            "#14b8a6", // teal
+            "#06b6d4", // cyan
+            "#3b82f6", // blue
+          ],
+
+          // Toast state
+          toast: {
+            show: false,
+            message: "",
+            hiding: false,
+          },
+
+          // Prompt modal state
+          promptModal: {
+            open: false,
+            form: {
+              title: "",
+              content: "",
+              categoryId: "",
+            },
+          },
+
+          // Category modal state
+          categoryModal: {
+            open: false,
+            form: {
+              name: "",
+              color: "#6366f1",
+            },
+          },
+
+          // Computed: filtered prompts
+          get filteredPrompts() {
+            let result = this.prompts;
+
+            // Filter by category
+            if (this.activeCategory !== null) {
+              result = result.filter((p) => p.categoryId === this.activeCategory);
+            }
+
+            // Filter by search query
+            if (this.searchQuery.trim()) {
+              const query = this.searchQuery.toLowerCase();
+              result = result.filter(
+                (p) =>
+                  p.title.toLowerCase().includes(query) ||
+                  p.content.toLowerCase().includes(query)
+              );
+            }
+
+            return result;
+          },
+
+          // Initialize app
+          init() {
+            this.loadFromStorage();
+          },
+
+          // LocalStorage operations
+          loadFromStorage() {
+            const storedPrompts = localStorage.getItem("pfiles_prompts");
+            const storedCategories = localStorage.getItem("pfiles_categories");
+
+            if (storedPrompts) {
+              this.prompts = JSON.parse(storedPrompts);
+            }
+            if (storedCategories) {
+              this.categories = JSON.parse(storedCategories);
+            }
+          },
+
+          saveToStorage() {
+            localStorage.setItem("pfiles_prompts", JSON.stringify(this.prompts));
+            localStorage.setItem("pfiles_categories", JSON.stringify(this.categories));
+          },
+
+          // Prompt CRUD
+          openPromptModal() {
+            this.promptModal.form = {
+              title: "",
+              content: "",
+              categoryId: this.activeCategory || "",
+            };
+            this.promptModal.open = true;
+          },
+
+          closePromptModal() {
+            this.promptModal.open = false;
+          },
+
+          savePrompt() {
+            const newPrompt = {
+              id: Date.now().toString(),
+              title: this.promptModal.form.title.trim(),
+              content: this.promptModal.form.content.trim(),
+              categoryId: this.promptModal.form.categoryId || null,
+              createdAt: new Date().toISOString(),
+            };
+
+            this.prompts.unshift(newPrompt);
+            this.saveToStorage();
+            this.closePromptModal();
+            this.showToast("Prompt saved successfully!");
+          },
+
+          deletePrompt(id) {
+            if (confirm("Are you sure you want to delete this prompt?")) {
+              this.prompts = this.prompts.filter((p) => p.id !== id);
+              this.saveToStorage();
+              this.showToast("Prompt deleted");
+            }
+          },
+
+          // Category CRUD
+          openCategoryModal() {
+            this.categoryModal.form = {
+              name: "",
+              color: "#6366f1",
+            };
+            this.categoryModal.open = true;
+          },
+
+          closeCategoryModal() {
+            this.categoryModal.open = false;
+          },
+
+          saveCategory() {
+            const newCategory = {
+              id: Date.now().toString(),
+              name: this.categoryModal.form.name.trim(),
+              color: this.categoryModal.form.color,
+            };
+
+            this.categories.push(newCategory);
+            this.saveToStorage();
+            this.closeCategoryModal();
+            this.showToast("Category created!");
+          },
+
+          deleteCategory(id) {
+            if (confirm("Delete this category? Prompts will be uncategorized.")) {
+              this.categories = this.categories.filter((c) => c.id !== id);
+              // Uncategorize prompts in this category
+              this.prompts = this.prompts.map((p) => {
+                if (p.categoryId === id) {
+                  return { ...p, categoryId: null };
+                }
+                return p;
+              });
+
+              if (this.activeCategory === id) {
+                this.activeCategory = null;
+              }
+
+              this.saveToStorage();
+              this.showToast("Category deleted");
+            }
+          },
+
+          // Helpers
+          getCategoryById(id) {
+            return this.categories.find((c) => c.id === id);
+          },
+
+          getPromptCount(categoryId) {
+            return this.prompts.filter((p) => p.categoryId === categoryId).length;
+          },
+
+          // Clipboard
+          async copyToClipboard(text) {
+            try {
+              await navigator.clipboard.writeText(text);
+              this.showToast("Copied to clipboard!");
+            } catch (err) {
+              this.showToast("Failed to copy");
+            }
+          },
+
+          // Toast notification
+          showToast(message) {
+            this.toast.message = message;
+            this.toast.show = true;
+            this.toast.hiding = false;
+
+            setTimeout(() => {
+              this.toast.hiding = true;
+              setTimeout(() => {
+                this.toast.show = false;
+                this.toast.hiding = false;
+              }, 300);
+            }, 2500);
+          },
+        };
+      }
+    </script>
+  </body>
+</html>
+
