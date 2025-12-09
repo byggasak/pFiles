@@ -18,7 +18,7 @@
     />
 
     <!-- Built CSS -->
-    <link rel="stylesheet" href="dist/output.css?v=13" />
+    <link rel="stylesheet" href="dist/output.css?v=16" />
 
     <!-- Alpine.js -->
     <script
@@ -72,15 +72,13 @@
             <span 
               x-show="isAdminMode"
               @click="openCategoryModal()"
-              class="inline-flex items-center justify-center w-7 h-7 rounded-full text-muted hover:text-accent cursor-pointer transition-colors"
+              class="inline-flex items-center justify-center w-7 h-7 rounded-full text-muted hover:text-accent cursor-pointer transition-colors mr-3"
               title="Add Category"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
             </span>
-            <!-- Spacer to match delete button width in admin mode -->
-            <span x-show="isAdminMode" class="w-5 ml-1"></span>
           </div>
 
           <nav class="space-y-1">
@@ -88,11 +86,10 @@
             <div
               @click="activeCategory = null"
               :class="activeCategory === null ? 'sidebar-item active' : 'sidebar-item'"
+              class="pr-3"
             >
               <span class="flex-1 truncate">All prompts</span>
               <span class="badge w-7 text-center" x-text="prompts.length"></span>
-              <!-- Spacer to match delete button width in admin mode -->
-              <span x-show="isAdminMode" class="w-5 ml-1"></span>
             </div>
 
             <!-- Dynamic Categories -->
@@ -100,14 +97,14 @@
               <div
                 @click="activeCategory = category.id"
                 :class="activeCategory === category.id ? 'sidebar-item active' : 'sidebar-item'"
-                class="group"
+                class="group relative pr-3"
               >
                 <span class="flex-1 truncate" x-text="category.name"></span>
                 <span class="badge w-7 text-center" x-text="getPromptCount(category.id)"></span>
                 <button
                   x-show="isAdminMode"
                   @click.stop="deleteCategory(category.id)"
-                  class="w-5 ml-1 opacity-0 group-hover:opacity-100 text-muted hover:text-red-400 transition-opacity flex items-center justify-center"
+                  class="absolute right-0 top-1/2 -translate-y-1/2 w-5 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 text-muted hover:text-red-400 transition-opacity"
                   title="Delete Category"
                 >
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,9 +117,9 @@
         </div>
 
         <!-- Sidebar Footer -->
-        <div class="p-4">
+        <div class="p-4 border-t border-border mt-auto">
           <!-- Admin Mode Link (when not in admin mode) -->
-          <div x-show="!isAdminMode" class="w-full text-center">
+          <div x-show="!isAdminMode" class="text-center">
             <button
               @click="openAdminModal()"
               class="text-sm italic underline transition-colors"
@@ -135,7 +132,7 @@
           </div>
           
           <!-- Admin Mode Active (when in admin mode) -->
-          <div x-show="isAdminMode" class="w-full" style="display: flex !important; align-items: center; justify-content: center; gap: 0.5rem;" x-bind:style="isAdminMode ? 'display: flex !important' : 'display: none !important'">
+          <div x-show="isAdminMode" class="flex items-center justify-center gap-2">
             <span class="text-sm italic" style="color: #ACACAC;">Admin mode</span>
             <button 
               @click="exitAdminMode()" 
