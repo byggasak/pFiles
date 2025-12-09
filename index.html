@@ -18,7 +18,7 @@
     />
 
     <!-- Built CSS -->
-    <link rel="stylesheet" href="dist/output.css?v=8" />
+    <link rel="stylesheet" href="dist/output.css?v=11" />
 
     <!-- Alpine.js -->
     <script
@@ -118,19 +118,20 @@
         <!-- Sidebar Footer -->
         <div class="p-4">
           <!-- Admin Mode Link (when not in admin mode) -->
-          <button
-            x-show="!isAdminMode"
-            @click="openAdminModal()"
-            class="w-full text-sm italic underline transition-colors text-center"
-            style="color: #161616;"
-            onmouseover="this.style.color='#ACACAC'"
-            onmouseout="this.style.color='#161616'"
-          >
-            Admin mode
-          </button>
+          <div x-show="!isAdminMode" class="w-full text-center">
+            <button
+              @click="openAdminModal()"
+              class="text-sm italic underline transition-colors"
+              style="color: #161616;"
+              onmouseover="this.style.color='#ACACAC'"
+              onmouseout="this.style.color='#161616'"
+            >
+              Admin mode
+            </button>
+          </div>
           
           <!-- Admin Mode Active (when in admin mode) -->
-          <div x-show="isAdminMode" class="flex items-center justify-center gap-2">
+          <div x-show="isAdminMode" class="w-full" style="display: flex !important; align-items: center; justify-content: center; gap: 0.5rem;" x-bind:style="isAdminMode ? 'display: flex !important' : 'display: none !important'">
             <span class="text-sm italic" style="color: #ACACAC;">Admin mode</span>
             <button 
               @click="exitAdminMode()" 
