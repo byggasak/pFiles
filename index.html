@@ -86,11 +86,11 @@
             <div
               @click="activeCategory = null"
               :class="activeCategory === null ? 'sidebar-item active' : 'sidebar-item'"
-              class="relative flex items-center pr-[58px] overflow-hidden"
+              class="relative flex items-center pr-[58px]"
             >
-              <span class="truncate flex-1 min-w-0 mr-9">All prompts</span>
-              <div class="absolute right-0 inset-y-0 flex items-center">
-                <span class="badge w-7 h-7 text-center shrink-0 relative">
+              <span class="truncate flex-1 min-w-0 pr-9">All prompts</span>
+              <div class="absolute right-0 inset-y-0 flex items-center pointer-events-none">
+                <span class="badge w-7 h-7 text-center shrink-0 relative pointer-events-auto">
                   <span x-text="prompts.length"></span>
                   <span x-show="isAdminMode" class="absolute left-[calc(100%+4px)] top-1/2 -translate-y-1/2 w-5 h-5 opacity-0 pointer-events-none shrink-0"></span>
                 </span>
@@ -102,11 +102,11 @@
               <div
                 @click="activeCategory = category.id"
                 :class="activeCategory === category.id ? 'sidebar-item active' : 'sidebar-item'"
-                class="group relative flex items-center pr-[58px] overflow-hidden"
+                class="group relative flex items-center pr-[58px]"
               >
-                <span class="truncate flex-1 min-w-0 mr-9" x-text="category.name"></span>
-                <div class="absolute right-0 inset-y-0 flex items-center">
-                  <span class="badge w-7 h-7 text-center shrink-0 relative">
+                <span class="truncate flex-1 min-w-0 pr-9" x-text="category.name"></span>
+                <div class="absolute right-0 inset-y-0 flex items-center pointer-events-none">
+                  <span class="badge w-7 h-7 text-center shrink-0 relative pointer-events-auto">
                     <span x-text="getPromptCount(category.id)"></span>
                     <button
                       x-show="isAdminMode"
