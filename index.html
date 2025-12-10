@@ -88,7 +88,7 @@
               :class="activeCategory === null ? 'sidebar-item active' : 'sidebar-item'"
               class="relative flex items-center pr-[58px]"
             >
-              <span class="truncate">All prompts</span>
+              <span class="truncate flex-1 min-w-0">All prompts</span>
               <div class="absolute right-0 inset-y-0 flex items-center">
                 <span class="badge w-7 h-7 text-center shrink-0 relative">
                   <span x-text="prompts.length"></span>
@@ -104,7 +104,7 @@
                 :class="activeCategory === category.id ? 'sidebar-item active' : 'sidebar-item'"
                 class="group relative flex items-center pr-[58px]"
               >
-                <span class="truncate" x-text="category.name"></span>
+                <span class="truncate flex-1 min-w-0" x-text="category.name"></span>
                 <div class="absolute right-0 inset-y-0 flex items-center">
                   <span class="badge w-7 h-7 text-center shrink-0 relative">
                     <span x-text="getPromptCount(category.id)"></span>
