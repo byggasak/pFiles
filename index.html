@@ -98,7 +98,7 @@
             </div>
 
             <!-- Dynamic Categories -->
-            <template x-for="category in categories" :key="category.id">
+            <template x-for="category in sortedCategories" :key="category.id">
               <div
                 @click="activeCategory = category.id"
                 :class="activeCategory === category.id ? 'sidebar-item active' : 'sidebar-item'"
@@ -333,7 +333,7 @@
             <label class="block text-sm font-medium text-white mb-2">Category</label>
             <select x-model="promptModal.form.categoryId" class="input-field">
               <option value="">No Category</option>
-              <template x-for="category in categories" :key="category.id">
+              <template x-for="category in sortedCategories" :key="category.id">
                 <option :value="category.id" x-text="category.name"></option>
               </template>
             </select>
@@ -405,7 +405,7 @@
                   <label class="block text-sm font-medium text-white mb-2">Category</label>
                   <select x-model="expandModal.form.categoryId" class="input-field">
                     <option value="">No Category</option>
-                    <template x-for="category in categories" :key="category.id">
+                  <template x-for="category in sortedCategories" :key="category.id">
                       <option :value="category.id" x-text="category.name"></option>
                     </template>
                   </select>
@@ -675,6 +675,12 @@
 
           get githubToken() {
             return localStorage.getItem("pfiles_github_token") || "";
+          },
+
+          get sortedCategories() {
+            return [...this.categories].sort((a, b) =>
+              a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+            );
           },
 
           get filteredPrompts() {
