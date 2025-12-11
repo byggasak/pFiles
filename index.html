@@ -111,7 +111,7 @@
                     <button
                       x-show="isAdminMode"
                       @click.stop="deleteCategory(category.id)"
-                        class="absolute left-[calc(100%+4px)] top-1/2 -translate-y-1/2 flex items-center justify-center w-5 h-5 text-muted hover:text-red-400 transition-opacity opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto"
+                        class="absolute left-[calc(100%+4px)] top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-5 h-5 text-border hover:text-red-400 pointer-events-auto"
                       title="Delete Category"
                     >
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -313,7 +313,6 @@
       <div class="modal-content" @click.stop>
         <div class="p-6 border-b border-border">
           <h2 class="text-xl font-bold text-white">Add New Prompt</h2>
-          <p class="text-sm text-muted mt-1">Create a new prompt template</p>
         </div>
 
         <form @submit.prevent="savePrompt()" class="p-6 space-y-5">
@@ -345,6 +344,7 @@
             <label class="block text-sm font-medium text-white mb-2">Prompt Content</label>
             <textarea
               x-model="promptModal.form.content"
+              @paste="handlePaste($event)"
               placeholder="Enter your prompt template here..."
               rows="8"
               class="textarea-field"
@@ -731,7 +731,9 @@
               const data = await response.json();
               this.fileSha = data.sha;
 
-              const content = JSON.parse(atob(data.content));
+              // Properly decode UTF-8 content from base64
+              const decodedContent = decodeURIComponent(escape(atob(data.content)));
+              const content = JSON.parse(decodedContent);
               this.categories = content.categories || [];
               this.prompts = content.prompts || [];
 
@@ -812,11 +814,31 @@
           async savePrompt() {
             this.saving = true;
 
+            // Normalize content to fix any encoding issues before saving
+            let normalizedContent = this.promptModal.form.content || '';
+            
+            // Fix common encoding issues
+            normalizedContent = normalizedContent
+              .replace(/â€™/g, "'")      // Smart apostrophe
+              .replace(/â€œ/g, '"')      // Left double quote
+              .replace(/â€/g, '"')       // Right double quote
+              .replace(/â€"/g, "—")      // Em dash
+              .replace(/â€"/g, "–")      // En dash
+              .replace(/â€¦/g, "…")      // Ellipsis
+              .replace(/Ã¢Â´Â/g, "–")   // Common dash encoding issue
+              .replace(/Ã¢Â´/g, "–")    // Variant of dash encoding
+              .replace(/Ã¢Â /g, "—")    // Common encoding issue
+              .replace(/Â(?=[Ãâ])/g, "") // Remove Â when part of encoding issue
+              .replace(/Ã¢/g, "");        // Remove encoding artifacts
+            
+            // Normalize Unicode
+            normalizedContent = normalizedContent.normalize('NFC');
+
             const newPrompt = {
               id: Date.now().toString(),
               title: this.promptModal.form.title.trim(),
               // Preserve exact formatting (no trim) so pasted text keeps whitespace.
-              content: this.promptModal.form.content,
+              content: normalizedContent,
               categoryId: this.promptModal.form.categoryId || null,
               createdAt: new Date().toISOString(),
             };
@@ -945,6 +967,62 @@
             } catch (err) {
               this.showToast("Failed to copy", "error");
             }
+          },
+
+          handlePaste(event) {
+            event.preventDefault();
+            
+            // Safari-compatible clipboard access
+            const clipboardData = event.clipboardData || window.clipboardData;
+            const paste = clipboardData ? clipboardData.getData('text/plain') : '';
+            
+            if (!paste) return;
+            
+            // Normalize the text to fix encoding issues while preserving all formatting
+            let normalized = paste;
+            
+            // Only fix specific known encoding issues - preserve everything else including formatting
+            // Fix common double-encoded UTF-8 sequences (only replace exact problematic patterns)
+            normalized = normalized
+              // Fix smart quotes and apostrophes
+              .replace(/â€™/g, "'")      // Smart apostrophe
+              .replace(/â€œ/g, '"')      // Left double quote
+              .replace(/â€/g, '"')       // Right double quote
+              // Fix dashes and special punctuation
+              .replace(/â€"/g, "—")      // Em dash
+              .replace(/â€"/g, "–")      // En dash
+              .replace(/â€¦/g, "…")      // Ellipsis
+              // Fix the specific problematic sequences from the image
+              .replace(/Ã¢Â´Â/g, "–")   // Common dash encoding issue (10–12) - use en dash
+              .replace(/Ã¢Â´/g, "–")    // Variant of dash encoding
+              .replace(/Ã¢Â /g, "—")    // Common encoding issue - use em dash
+              // Only remove Â when it's clearly part of an encoding issue (followed by problematic chars)
+              .replace(/Â(?=[Ãâ])/g, "") // Remove Â only when followed by encoding issue chars
+              .replace(/Ã¢/g, "");        // Remove remaining encoding artifacts
+            
+            // Normalize Unicode characters to composed form (preserves formatting)
+            normalized = normalized.normalize('NFC');
+            
+            // Insert at cursor position (preserves all formatting, line breaks, spacing)
+            const textarea = event.target;
+            const start = textarea.selectionStart || 0;
+            const end = textarea.selectionEnd || 0;
+            const currentValue = this.promptModal.form.content || '';
+            
+            this.promptModal.form.content = 
+              currentValue.substring(0, start) + 
+              normalized + 
+              currentValue.substring(end);
+            
+            // Set cursor position after inserted text (Safari-compatible)
+            setTimeout(() => {
+              if (textarea.setSelectionRange) {
+                textarea.setSelectionRange(start + normalized.length, start + normalized.length);
+              } else if (textarea.selectionStart !== undefined) {
+                textarea.selectionStart = start + normalized.length;
+                textarea.selectionEnd = start + normalized.length;
+              }
+            }, 0);
           },
 
           showToast(message, type = "success") {
