@@ -19,6 +19,10 @@
     {
       "id": "motion",
       "name": "Motion"
+    },
+    {
+      "id": "prompting",
+      "name": "Prompting"
     }
   ],
   "prompts": [
