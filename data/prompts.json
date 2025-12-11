@@ -27,6 +27,13 @@
   ],
   "prompts": [
     {
+      "id": "1765446692358",
+      "title": "Confidence-based Prompting",
+      "content": "for high-stakes decisions.\n\nAsk the model to rate its confidence and provide alternative answers.\n\nTemplate:\n\nAnswer this question: [question]\n\nFor your answer, provide:\n1. Your primary answer\n2. Confidence level (0-100%)\n3. Key assumptions you're making\n4. What would change your answer\n5. Alternative answer if you're <80% confident\n\n---\n\nExample:\n\nAnswer this question: Will Rust replace C++ in systems programming by 2030?\n\nFor your answer, provide:\n1. Your primary answer\n2. Confidence level (0-100%)\n3. Key assumptions you're making\n4. What would change your answer\n5. Alternative answer if you're <80% confident",
+      "categoryId": "prompting",
+      "createdAt": "2025-12-11T09:51:32.358Z"
+    },
+    {
       "id": "1765445892775",
       "title": "Structured Thinking, Complex Tasks",
       "content": "Force the model to think in layers before responding.\n\nTemplate:\n\nBefore answering, complete these steps:\n\n[UNDERSTAND]\n- Restate the problem in your own words\n- Identify what's actually being asked\n\n[ANALYZE]\n- Break down into sub-components\n- Note any assumptions or constraints\n\n[STRATEGIZE]\n- Outline 2-3 potential approaches\n- Evaluate trade-offs\n\n[EXECUTE]\n- Provide your final answer\n- Explain your reasoning\n\nQuestion: [your question]\n\n---\n\nExample:\n\nBefore answering, complete these steps:\n\n[UNDERSTAND]\n- Restate the problem in your own words\n- Identify what's actually being asked\n\n[ANALYZE]\n- Break down into sub-components\n- Note any assumptions or constraints\n\n[STRATEGIZE]\n- Outline 2-3 potential approaches\n- Evaluate trade-offs\n\n[EXECUTE]\n- Provide your final answer\n- Explain your reasoning\n\nQuestion: Should I use microservices or monolith for a 5-person startup building a B2B SaaS with 1000 expected users in year one?",
