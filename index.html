@@ -52,10 +52,26 @@
     </div>
 
     <div class="flex h-screen overflow-hidden">
+      <!-- Mobile Menu Overlay -->
+      <div
+        x-show="mobileMenuOpen"
+        @click="mobileMenuOpen = false"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-black/60 z-40 md:hidden"
+      ></div>
+
       <!-- Sidebar -->
-      <aside class="w-64 bg-sidebar flex flex-col shrink-0">
+      <aside 
+        :class="mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'"
+        class="fixed md:static inset-y-0 left-0 z-50 w-64 bg-sidebar flex flex-col shrink-0 transition-transform duration-300 ease-in-out md:transition-none"
+      >
         <!-- Logo -->
-        <div class="px-8 py-8">
+        <div class="px-6 md:px-8 py-6 md:py-8 flex items-center justify-between">
           <div 
             class="cursor-default select-none"
             @click="handleLogoClick()"
@@ -63,10 +79,20 @@
           >
             <h1 class="text-2xl font-bold text-white tracking-tight">/p_Files/</h1>
           </div>
+          <!-- Mobile Close Button -->
+          <button
+            @click="mobileMenuOpen = false"
+            class="md:hidden p-2 text-muted hover:text-white transition-colors"
+            aria-label="Close menu"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
 
         <!-- Categories -->
-        <div class="flex-1 overflow-y-auto px-8">
+        <div class="flex-1 overflow-y-auto px-6 md:px-8">
             <div class="flex items-center relative mb-4 pr-[58px]">
             <span class="text-xs font-semibold text-muted uppercase tracking-wider">Categories</span>
             <span 
@@ -84,7 +110,7 @@
           <nav class="space-y-1">
             <!-- All Prompts -->
             <div
-              @click="activeCategory = null"
+              @click="activeCategory = null; mobileMenuOpen = false"
               :class="activeCategory === null ? 'sidebar-item active' : 'sidebar-item'"
               class="relative flex items-center"
             >
@@ -100,7 +126,7 @@
             <!-- Dynamic Categories -->
             <template x-for="category in sortedCategories" :key="category.id">
               <div
-                @click="activeCategory = category.id"
+                @click="activeCategory = category.id; mobileMenuOpen = false"
                 :class="activeCategory === category.id ? 'sidebar-item active' : 'sidebar-item'"
                 class="group relative flex items-center"
               >
@@ -111,7 +137,7 @@
                     <button
                       x-show="isAdminMode"
                       @click.stop="deleteCategory(category.id)"
-                        class="absolute left-[calc(100%+4px)] top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-5 h-5 text-border hover:text-red-400 pointer-events-auto"
+                        class="absolute left-[calc(100%+4px)] top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 md:w-5 md:h-5 text-border hover:text-red-400 pointer-events-auto"
                       title="Delete Category"
                     >
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -126,7 +152,7 @@
         </div>
 
         <!-- Sidebar Footer -->
-        <div class="px-8 py-4 border-t border-border mt-auto">
+        <div class="px-6 md:px-8 py-4 border-t border-border mt-auto">
           <!-- Admin Mode Link (when not in admin mode) -->
           <div x-show="!isAdminMode" class="text-center">
             <button
@@ -159,8 +185,24 @@
       <!-- Main Content -->
       <main class="flex-1 flex flex-col overflow-hidden bg-background">
         <!-- Header -->
-        <header class="px-8 py-6">
-          <div class="flex items-center gap-4">
+        <header class="px-4 md:px-8 py-4 md:py-6">
+          <div class="flex items-center gap-3 md:gap-4">
+            <!-- Mobile Menu Button -->
+            <button
+              @click="mobileMenuOpen = !mobileMenuOpen"
+              class="md:hidden p-2 -ml-2 text-muted hover:text-white transition-colors"
+              aria-label="Toggle menu"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+
+            <!-- Mobile Logo -->
+            <div class="md:hidden">
+              <h1 class="text-xl font-bold text-white tracking-tight">/p_Files/</h1>
+            </div>
+
             <!-- Search -->
             <div class="relative flex-1 max-w-md">
               <svg
@@ -190,18 +232,19 @@
             <button
               x-show="isAdminMode"
               @click="openPromptModal()"
-              class="btn-primary"
+              class="btn-primary shrink-0"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
-              <span>Add prompt</span>
+              <span class="hidden sm:inline">Add prompt</span>
+              <span class="sm:hidden">Add</span>
             </button>
           </div>
         </header>
 
         <!-- Content Area -->
-        <div class="flex-1 overflow-y-auto px-8 pb-8">
+        <div class="flex-1 overflow-y-auto px-4 md:px-8 pb-6 md:pb-8">
           <!-- Admin Token Required Banner -->
           <template x-if="isAdminMode && !isConfigured">
             <div class="mb-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
@@ -245,7 +288,7 @@
 
           <!-- Prompts Grid -->
           <template x-if="filteredPrompts.length > 0">
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
               <template x-for="prompt in filteredPrompts" :key="prompt.id">
                 <article class="card flex flex-col">
                   <!-- Card Header -->
@@ -259,7 +302,7 @@
                       <button
                         x-show="isAdminMode"
                         @click="deletePrompt(prompt.id)"
-                      class="btn-danger"
+                      class="btn-danger min-w-[44px] min-h-[44px]"
                         title="Delete Prompt"
                       >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,13 +322,13 @@
                   <div class="p-4 flex gap-3">
                     <button
                       @click="expandPrompt(prompt)"
-                      class="btn-secondary flex-1"
+                      class="btn-secondary flex-1 min-h-[44px]"
                     >
                       Expand
                     </button>
                     <button
                       @click="copyToClipboard(prompt.content)"
-                      class="btn-secondary flex-1"
+                      class="btn-secondary flex-1 min-h-[44px]"
                     >
                       Copy
                     </button>
@@ -311,11 +354,11 @@
       @click.self="closePromptModal()"
     >
       <div class="modal-content" @click.stop>
-        <div class="p-6 border-b border-border">
+        <div class="p-4 md:p-6 border-b border-border">
           <h2 class="text-xl font-bold text-white">Add New Prompt</h2>
         </div>
 
-        <form @submit.prevent="savePrompt()" class="p-6 space-y-5">
+        <form @submit.prevent="savePrompt()" class="p-4 md:p-6 space-y-5">
           <!-- Title -->
           <div>
             <label class="block text-sm font-medium text-white mb-2">Title</label>
@@ -354,10 +397,10 @@
 
           <!-- Actions -->
           <div class="flex gap-3 pt-2">
-            <button type="button" @click="closePromptModal()" class="btn-secondary flex-1">
+            <button type="button" @click="closePromptModal()" class="btn-secondary flex-1 min-h-[44px]">
               Cancel
             </button>
-            <button type="submit" class="btn-primary flex-1" :disabled="saving">
+            <button type="submit" class="btn-primary flex-1 min-h-[44px]" :disabled="saving">
               <span x-text="saving ? 'Saving...' : 'Save Prompt'"></span>
             </button>
           </div>
@@ -378,7 +421,7 @@
       @click.self="closeExpandModal()"
     >
       <div class="modal-content max-w-2xl" @click.stop>
-        <div class="p-6 border-b border-border flex items-start justify-between">
+        <div class="p-4 md:p-6 border-b border-border flex items-start justify-between">
           <div class="flex-1">
             <!-- View Mode -->
             <template x-if="!expandModal.editing">
@@ -405,7 +448,7 @@
                   <label class="block text-sm font-medium text-white mb-2">Category</label>
                   <select x-model="expandModal.form.categoryId" class="input-field">
                     <option value="">No Category</option>
-                  <template x-for="category in sortedCategories" :key="category.id">
+                    <template x-for="category in sortedCategories" :key="category.id">
                       <option :value="category.id" x-text="category.name"></option>
                     </template>
                   </select>
@@ -413,14 +456,14 @@
               </div>
             </template>
           </div>
-          <button @click="closeExpandModal()" class="btn-ghost shrink-0 ml-4">
+          <button @click="closeExpandModal()" class="btn-ghost shrink-0 ml-4 min-w-[44px] min-h-[44px]">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div class="p-6">
+        <div class="p-4 md:p-6">
           <!-- View Mode -->
           <template x-if="!expandModal.editing">
             <div class="code-block max-h-96 overflow-y-auto">
@@ -442,21 +485,21 @@
           </template>
         </div>
 
-        <div class="p-6 pt-0 flex gap-3">
+        <div class="p-4 md:p-6 pt-0 flex gap-3">
           <!-- View Mode Buttons -->
           <template x-if="!expandModal.editing">
             <div class="flex gap-3 w-full">
-              <button @click="closeExpandModal()" class="btn-secondary flex-1">
+              <button @click="closeExpandModal()" class="btn-secondary flex-1 min-h-[44px]">
                 Close
               </button>
               <button 
                 x-show="isAdminMode"
                 @click="startEditPrompt()" 
-                class="btn-secondary flex-1"
+                class="btn-secondary flex-1 min-h-[44px]"
               >
                 Edit
               </button>
-              <button @click="copyToClipboard(expandModal.prompt?.content)" class="btn-primary flex-1">
+              <button @click="copyToClipboard(expandModal.prompt?.content)" class="btn-primary flex-1 min-h-[44px]">
                 Copy
               </button>
             </div>
@@ -464,10 +507,10 @@
           <!-- Edit Mode Buttons -->
           <template x-if="expandModal.editing">
             <div class="flex gap-3 w-full">
-              <button @click="cancelEditPrompt()" class="btn-secondary flex-1">
+              <button @click="cancelEditPrompt()" class="btn-secondary flex-1 min-h-[44px]">
                 Cancel
               </button>
-              <button @click="saveEditedPrompt()" class="btn-primary flex-1" :disabled="saving">
+              <button @click="saveEditedPrompt()" class="btn-primary flex-1 min-h-[44px]" :disabled="saving">
                 <span x-text="saving ? 'Saving...' : 'Save Changes'"></span>
               </button>
             </div>
@@ -489,12 +532,12 @@
       @click.self="closeCategoryModal()"
     >
       <div class="modal-content" @click.stop>
-        <div class="p-6 border-b border-border">
+        <div class="p-4 md:p-6 border-b border-border">
           <h2 class="text-xl font-bold text-white">Add New Category</h2>
           <p class="text-sm text-muted mt-1">Organize your prompts with categories</p>
         </div>
 
-        <form @submit.prevent="saveCategory()" class="p-6 space-y-5">
+        <form @submit.prevent="saveCategory()" class="p-4 md:p-6 space-y-5">
           <!-- Name -->
           <div>
             <label class="block text-sm font-medium text-white mb-2">Category Name</label>
@@ -509,10 +552,10 @@
 
           <!-- Actions -->
           <div class="flex gap-3 pt-2">
-            <button type="button" @click="closeCategoryModal()" class="btn-secondary flex-1">
+            <button type="button" @click="closeCategoryModal()" class="btn-secondary flex-1 min-h-[44px]">
               Cancel
             </button>
-            <button type="submit" class="btn-primary flex-1" :disabled="saving">
+            <button type="submit" class="btn-primary flex-1 min-h-[44px]" :disabled="saving">
               <span x-text="saving ? 'Saving...' : 'Save Category'"></span>
             </button>
           </div>
@@ -533,7 +576,7 @@
       @click.self="closeAdminModal()"
     >
       <div class="modal-content max-w-md" @click.stop>
-        <div class="p-6 border-b border-border">
+        <div class="p-4 md:p-6 border-b border-border">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-accent/20 rounded-xl flex items-center justify-center">
               <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -547,7 +590,7 @@
           </div>
         </div>
 
-        <form @submit.prevent="handleAdminAuth()" class="p-6 space-y-5">
+        <form @submit.prevent="handleAdminAuth()" class="p-4 md:p-6 space-y-5">
           <!-- Admin Password -->
           <div>
             <label class="block text-sm font-medium text-white mb-2">Admin Password</label>
@@ -595,12 +638,12 @@
 
           <!-- Actions -->
           <div class="flex gap-3 pt-2">
-            <button type="button" @click="closeAdminModal()" class="btn-secondary flex-1">
+            <button type="button" @click="closeAdminModal()" class="btn-secondary flex-1 min-h-[44px]">
               Cancel
             </button>
             <button 
               type="submit" 
-              class="btn-primary flex-1"
+              class="btn-primary flex-1 min-h-[44px]"
               x-text="adminModal.authenticated ? 'Save & Enter Admin Mode' : 'Verify Password'"
             >
             </button>
@@ -638,6 +681,9 @@
           isAdminMode: false,
           logoClickCount: 0,
           logoClickTimer: null,
+
+          // Mobile state
+          mobileMenuOpen: false,
 
           // Toast state
           toast: {
