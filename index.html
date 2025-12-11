@@ -420,7 +420,7 @@
       class="modal-overlay"
       @click.self="closeExpandModal()"
     >
-      <div class="modal-content max-w-2xl" @click.stop>
+      <div class="modal-content w-full md:max-w-2xl" @click.stop>
         <div class="p-4 md:p-6 border-b border-border flex items-start justify-between">
           <div class="flex-1">
             <!-- View Mode -->
@@ -762,8 +762,35 @@
 
           // Initialize
           async init() {
+            // Watch for modal changes to lock/unlock body scroll
+            this.$watch('promptModal.open', (isOpen) => {
+              this.updateBodyScroll();
+            });
+            this.$watch('categoryModal.open', (isOpen) => {
+              this.updateBodyScroll();
+            });
+            this.$watch('adminModal.open', (isOpen) => {
+              this.updateBodyScroll();
+            });
+            this.$watch('expandModal.open', (isOpen) => {
+              this.updateBodyScroll();
+            });
+            this.$watch('mobileMenuOpen', (isOpen) => {
+              this.updateBodyScroll();
+            });
             this.isAdminMode = sessionStorage.getItem("pfiles_admin") === "true";
             await this.loadData();
+          },
+
+          // Update body scroll lock
+          updateBodyScroll() {
+            const anyModalOpen = this.promptModal.open || this.categoryModal.open || 
+                                 this.adminModal.open || this.expandModal.open || this.mobileMenuOpen;
+            if (anyModalOpen) {
+              document.body.style.overflow = 'hidden';
+            } else {
+              document.body.style.overflow = '';
+            }
           },
 
           // Handle keyboard shortcuts
