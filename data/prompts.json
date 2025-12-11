@@ -27,6 +27,13 @@
   ],
   "prompts": [
     {
+      "id": "1765445772914",
+      "title": "Good & Bad examples",
+      "content": "I need you to [task]. Here are examples:\n\n✅ GOOD Example 1: [example]\n✅ GOOD Example 2: [example]\n\n❌ BAD Example 1: [example]\nWhy it's bad: [reason]\n❌ BAD Example 2: [example]\nWhy it's bad: [reason]\n\nNow complete: [your actual task]\n\n---\n\nExample:\n\nI need you to write cold email subject lines. Here are examples:\n\n✅ GOOD: \"Quick question about your Q4 engineering roadmap\"\n✅ GOOD: \"Saw your post on distributed systems—thoughts on this?\"\n\n❌ BAD: \"URGENT: Limited Time Offer Inside!!!\"\nWhy it's bad: Spam trigger words, fake urgency\n❌ BAD: \"You won't believe what we built...\"\nWhy it's bad: Clickbait, no context\n\nNow write 5 subject lines for: SaaS tool that reduces cloud costs by 40%\n\n---\n\nThis eliminates 80% of generic AI responses.",
+      "categoryId": "prompting",
+      "createdAt": "2025-12-11T09:36:12.914Z"
+    },
+    {
       "id": "1765445671871",
       "title": "Chain-of-Verification (CoVe)",
       "content": "Google's research team uses this to eliminate hallucinations.\n\nThe model generates an answer, then generates verification questions, answers them, and refines the original response.\n\nTemplate:\n\nTask: [your question]\n\nStep 1: Provide your initial answer\nStep 2: Generate 5 verification questions that would expose errors in your answer\nStep 3: Answer each verification question\nStep 4: Provide your final, corrected answer based on verification\n\n---\n\nExample:\n\nTask: Explain how transformers handle long-context windows\n\nStep 1: Provide your initial answer\nStep 2: Generate 5 verification questions that would expose errors in your answer\nStep 3: Answer each verification question\nStep 4: Provide your final, corrected answer based on verification\n\n---\n\nAccuracy jumps from 60% to 92% on complex technical queries.\n",
