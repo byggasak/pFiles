@@ -11,6 +11,10 @@
     {
       "id": "data",
       "name": "Data"
+    },
+    {
+      "id": "images",
+      "name": "Images"
     }
   ],
   "prompts": [
