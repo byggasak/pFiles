@@ -19,6 +19,13 @@
   ],
   "prompts": [
     {
+      "id": "1765445151985",
+      "title": "Add realism",
+      "content": "📸 General Terms ⬇️ \n\n• photorealistic\n• hyper-realistic\n• ultra-detailed\n• cinematic realism\n• high-resolution texture\n• lifelike lighting\n• realistic depth of field\n• shallow depth of field\n• natural imperfections\n• documentary-style\n• real-world lighting\n• sharp focus with background blur\n• unedited photo look\n• candid feel\n• realistic reflections and shadows\n\n📷 Camera + Lens Language ⬇️ \n\n• shot on 50mm lens\n• DSLR photo\n• full-frame sensor look\n• prime lens clarity\n• bokeh background\n• camera grain\n• motion blur\n• handheld photo effect\n• low aperture (e.g. f/1.8 look)\n• slight lens distortion\n• chromatic aberration\n\n💡 Lighting Descriptions ⬇️ \n\n• soft natural light\n• harsh midday sun\n• backlit glow\n• overexposed highlights\n• real-time shadow falloff\n• mixed lighting sources\n• window light with bounce\n• golden hour tones\n• warm morning light\n• dim ambient light\n• specular highlights",
+      "categoryId": "images",
+      "createdAt": "2025-12-11T09:25:51.985Z"
+    },
+    {
       "id": "1765443215013",
       "title": "Analyze and visualize data",
       "content": "Create an interactive dashboard where I can explore our marketing performance data from the last quarter.\n\nI've attached:\n- A channel-level performance CSV\n- A top-line monthly metrics CSV\n\nThe dashboard should include:\n\nOverview\n- Total revenue for the quarter\n- Net new MRR\n- Blended ROAS and blended CAC\n\nCharts\n- Month-over-month MRR growth with churn and net growth shown\n- Channel performance comparison (spend vs revenue vs ROAS)\n- Funnel velocity (leads → opportunities → new customers per month) if data is available\n\nInteraction\n- Filters by channel and month\n- Tabs or views for:\n  - Overview\n  - Channel View\n  - Planner / Recommendations\n\nDesign\n- Clean, minimal UI (no 3D charts)\n- Clear labels and tooltips\n\nBuild this as an interactive app so I can click around, change filters, and explore the data.",
