@@ -379,13 +379,41 @@
     >
       <div class="modal-content max-w-2xl" @click.stop>
         <div class="p-6 border-b border-border flex items-start justify-between">
-          <div>
-            <h2 class="text-xl font-bold text-white" x-text="expandModal.prompt?.title"></h2>
-            <template x-if="expandModal.prompt && getCategoryById(expandModal.prompt.categoryId)">
-              <p class="text-sm text-muted mt-1" x-text="getCategoryById(expandModal.prompt.categoryId)?.name"></p>
+          <div class="flex-1">
+            <!-- View Mode -->
+            <template x-if="!expandModal.editing">
+              <div>
+                <h2 class="text-xl font-bold text-white" x-text="expandModal.prompt?.title"></h2>
+                <template x-if="expandModal.prompt && getCategoryById(expandModal.prompt.categoryId)">
+                  <p class="text-sm text-muted mt-1" x-text="getCategoryById(expandModal.prompt.categoryId)?.name"></p>
+                </template>
+              </div>
+            </template>
+            <!-- Edit Mode -->
+            <template x-if="expandModal.editing">
+              <div class="space-y-4 w-full">
+                <div>
+                  <label class="block text-sm font-medium text-white mb-2">Title</label>
+                  <input
+                    type="text"
+                    x-model="expandModal.form.title"
+                    class="input-field"
+                    required
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-white mb-2">Category</label>
+                  <select x-model="expandModal.form.categoryId" class="input-field">
+                    <option value="">No Category</option>
+                    <template x-for="category in categories" :key="category.id">
+                      <option :value="category.id" x-text="category.name"></option>
+                    </template>
+                  </select>
+                </div>
+              </div>
             </template>
           </div>
-          <button @click="closeExpandModal()" class="btn-ghost">
+          <button @click="closeExpandModal()" class="btn-ghost shrink-0 ml-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -393,18 +421,57 @@
         </div>
 
         <div class="p-6">
-          <div class="code-block max-h-96 overflow-y-auto">
-            <pre class="whitespace-pre-wrap break-words text-sm" x-text="expandModal.prompt?.content"></pre>
-          </div>
+          <!-- View Mode -->
+          <template x-if="!expandModal.editing">
+            <div class="code-block max-h-96 overflow-y-auto">
+              <pre class="whitespace-pre-wrap break-words text-sm" x-text="expandModal.prompt?.content"></pre>
+            </div>
+          </template>
+          <!-- Edit Mode -->
+          <template x-if="expandModal.editing">
+            <div>
+              <label class="block text-sm font-medium text-white mb-2">Prompt Content</label>
+              <textarea
+                x-model="expandModal.form.content"
+                @paste="handlePaste($event)"
+                rows="12"
+                class="textarea-field"
+                required
+              ></textarea>
+            </div>
+          </template>
         </div>
 
         <div class="p-6 pt-0 flex gap-3">
-          <button @click="closeExpandModal()" class="btn-secondary flex-1">
-            Close
-          </button>
-          <button @click="copyToClipboard(expandModal.prompt?.content)" class="btn-primary flex-1">
-            Copy to Clipboard
-          </button>
+          <!-- View Mode Buttons -->
+          <template x-if="!expandModal.editing">
+            <div class="flex gap-3 w-full">
+              <button @click="closeExpandModal()" class="btn-secondary flex-1">
+                Close
+              </button>
+              <button 
+                x-show="isAdminMode"
+                @click="startEditPrompt()" 
+                class="btn-secondary flex-1"
+              >
+                Edit
+              </button>
+              <button @click="copyToClipboard(expandModal.prompt?.content)" class="btn-primary flex-1">
+                Copy
+              </button>
+            </div>
+          </template>
+          <!-- Edit Mode Buttons -->
+          <template x-if="expandModal.editing">
+            <div class="flex gap-3 w-full">
+              <button @click="cancelEditPrompt()" class="btn-secondary flex-1">
+                Cancel
+              </button>
+              <button @click="saveEditedPrompt()" class="btn-primary flex-1" :disabled="saving">
+                <span x-text="saving ? 'Saving...' : 'Save Changes'"></span>
+              </button>
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -597,6 +664,8 @@
           expandModal: {
             open: false,
             prompt: null,
+            editing: false,
+            form: { title: "", content: "", categoryId: "" },
           },
 
           // Computed
@@ -878,12 +947,88 @@
           // Expand prompt
           expandPrompt(prompt) {
             this.expandModal.prompt = prompt;
+            this.expandModal.editing = false;
             this.expandModal.open = true;
           },
 
           closeExpandModal() {
             this.expandModal.open = false;
             this.expandModal.prompt = null;
+            this.expandModal.editing = false;
+            this.expandModal.form = { title: "", content: "", categoryId: "" };
+          },
+
+          startEditPrompt() {
+            if (!this.expandModal.prompt) return;
+            this.expandModal.form = {
+              title: this.expandModal.prompt.title,
+              content: this.expandModal.prompt.content,
+              categoryId: this.expandModal.prompt.categoryId || "",
+            };
+            this.expandModal.editing = true;
+          },
+
+          cancelEditPrompt() {
+            this.expandModal.editing = false;
+            this.expandModal.form = { title: "", content: "", categoryId: "" };
+          },
+
+          async saveEditedPrompt() {
+            if (!this.expandModal.prompt) return;
+            if (!this.isConfigured) {
+              this.showToast("Please configure GitHub token first", "error");
+              this.openAdminModal();
+              return;
+            }
+
+            this.saving = true;
+
+            // Normalize content to fix any encoding issues before saving
+            let normalizedContent = this.expandModal.form.content || '';
+            
+            // Fix common encoding issues
+            normalizedContent = normalizedContent
+              .replace(/â€™/g, "'")      // Smart apostrophe
+              .replace(/â€œ/g, '"')      // Left double quote
+              .replace(/â€/g, '"')       // Right double quote
+              .replace(/â€"/g, "—")      // Em dash
+              .replace(/â€"/g, "–")      // En dash
+              .replace(/â€¦/g, "…")      // Ellipsis
+              .replace(/Ã¢Â´Â/g, "–")   // Common dash encoding issue
+              .replace(/Ã¢Â´/g, "–")    // Variant of dash encoding
+              .replace(/Ã¢Â /g, "—")    // Common encoding issue
+              .replace(/Â(?=[Ãâ])/g, "") // Remove Â when part of encoding issue
+              .replace(/Ã¢/g, "");        // Remove encoding artifacts
+            
+            // Normalize Unicode
+            normalizedContent = normalizedContent.normalize('NFC');
+
+            // Update the prompt
+            const promptIndex = this.prompts.findIndex(p => p.id === this.expandModal.prompt.id);
+            if (promptIndex !== -1) {
+              this.prompts[promptIndex] = {
+                ...this.prompts[promptIndex],
+                title: this.expandModal.form.title.trim(),
+                content: normalizedContent,
+                categoryId: this.expandModal.form.categoryId || null,
+              };
+              
+              // Update the modal's prompt reference
+              this.expandModal.prompt = this.prompts[promptIndex];
+            }
+
+            const success = await this.saveData();
+            this.saving = false;
+
+            if (success) {
+              this.expandModal.editing = false;
+              this.showToast("Prompt updated!");
+            } else {
+              // Revert on failure
+              if (promptIndex !== -1) {
+                this.prompts[promptIndex] = this.expandModal.prompt;
+              }
+            }
           },
 
           // Category CRUD
