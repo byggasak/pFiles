@@ -9,13 +9,5 @@
       "name": "Midjourney"
     }
   ],
-  "prompts": [
-    {
-      "id": "1765377611329",
-      "title": "Branded Presentation",
-      "content": "Create a Google Slides presentation (10â12 slides) that tells the story of our quarter â what worked, what didn't, and where we should double down in Q1 2026.\n\nI've attached our Q4 2025 marketing performance data:\n\nInclude:\n- Executive summary with key wins\n- Channel-by-channel performance breakdown\n- Month-over-month growth trajectory\n- Top 3 underperforming areas with recommendations\n- Q1 2026 budget reallocation proposal based on ROAS and CAC\n\nApply the following style guide to the presentation:\n\n## Visual Style Guide\n\n| Element | Specification | Usage |\n|---------|---------------|-------|\n| **Font** | Inter | All text elements |\n| **Primary Color** | #FF6D33 | Headers, accent elements |\n| **Secondary Color** | #FFCA51 | Highlights, charts |\n| **Text Color** | #0F1E35 | Body text |\n| **Background** | #FCF8F4 | Light backgrounds |\n| **Shapes** | Rounded rectangles, 8px radius | Section dividers, buttons |\n| **Images** | Create simple flat illustrations | One per major section |\n| **Charts** | Minimal design, no 3D effects | Clean, executive-ready |\n\nMake the presentation visually compelling and executive-ready. Use the data provided â do not make up any numbers.",
-      "categoryId": "design",
-      "createdAt": "2025-12-10T14:40:11.329Z"
-    }
-  ]
+  "prompts": []
 }
