@@ -15,6 +15,13 @@
   ],
   "prompts": [
     {
+      "id": "1765442285878",
+      "title": "Build a prototype",
+      "content": "<prototype_requirements>\nBuild an interactive, clickable prototype with:\n- Realistic sample data (names, numbers, dates)\n- Functional navigation between all screens/sections\n- Visual feedback on interactions (hover states, button clicks, form submissions)\n- A polished, professional UI using a clean design system\n</prototype_requirements>\n\n<output_format>\n- Single-page app (SPA) or clear multi-page structure\n- Include mock data that demonstrates each feature working\n- Make all interactive elements clickable and functional within the prototype\n</output_format>\n\n<briefing>\nWhat are we building?\n[Short description of the app and its purpose]\n\nWho is the user?\n[Primary user persona(s) and what they care about]\n\nCore features needed:\n\n[Section or Feature Group 1]\n- [Feature 1]\n- [Feature 2]\n- [Feature 3]\n\n[Section or Feature Group 2]\n- [Feature 1]\n- [Feature 2]\n- [Feature 3]\n\n[Section or Feature Group 3]\n- [Feature 1]\n- [Feature 2]\n- [Feature 3]\n\nGlobal expectations\n- [Performance, accessibility, responsiveness, branding needs, etc.]\n</briefing>\n\nBuild this prototype so I can click through and test each feature.\nAsk clarifying questions if anything is ambiguous.",
+      "categoryId": "build",
+      "createdAt": "2025-12-11T08:38:05.878Z"
+    },
+    {
       "id": "1765441142904",
       "title": "Brand Presentation",
       "content": "Create a Google Slides presentation (10–12 slides) that tells the story of our quarter — what worked, what didn't, and where we should double down in Q1 2026.\n\nI've attached our Q4 2025 marketing performance data:\n\nInclude:\n- Executive summary with key wins\n- Channel-by-channel performance breakdown\n- Month-over-month growth trajectory\n- Top 3 underperforming areas with recommendations\n- Q1 2026 budget reallocation proposal based on ROAS and CAC\n\nApply the following style guide to the presentation:\n\n## Visual Style Guide\n\n| Element | Specification | Usage |\n|---------|---------------|-------|\n| **Font** | Inter | All text elements |\n| **Primary Color** | #FF6D33 | Headers, accent elements |\n| **Secondary Color** | #FFCA51 | Highlights, charts |\n| **Text Color** | #0F1E35 | Body text |\n| **Background** | #FCF8F4 | Light backgrounds |\n| **Shapes** | Rounded rectangles, 8px radius | Section dividers, buttons |\n| **Images** | Create simple flat illustrations | One per major section |\n| **Charts** | Minimal design, no 3D effects | Clean, executive-ready |\n\nMake the presentation visually compelling and executive-ready. Use the data provided — do not make up any numbers.",
