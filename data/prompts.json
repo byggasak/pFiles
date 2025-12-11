@@ -7,6 +7,10 @@
     {
       "id": "build",
       "name": "Build"
+    },
+    {
+      "id": "data",
+      "name": "Data"
     }
   ],
   "prompts": [
