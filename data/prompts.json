@@ -30,7 +30,7 @@
       "id": "1765445671871",
       "title": "Chain-of-Verification (CoVe)",
       "content": "Google's research team uses this to eliminate hallucinations.\n\nThe model generates an answer, then generates verification questions, answers them, and refines the original response.\n\nTemplate:\n\nTask: [your question]\n\nStep 1: Provide your initial answer\nStep 2: Generate 5 verification questions that would expose errors in your answer\nStep 3: Answer each verification question\nStep 4: Provide your final, corrected answer based on verification\n\n---\n\nExample:\n\nTask: Explain how transformers handle long-context windows\n\nStep 1: Provide your initial answer\nStep 2: Generate 5 verification questions that would expose errors in your answer\nStep 3: Answer each verification question\nStep 4: Provide your final, corrected answer based on verification\n\n---\n\nAccuracy jumps from 60% to 92% on complex technical queries.\n",
-      "categoryId": null,
+      "categoryId": "prompting",
       "createdAt": "2025-12-11T09:34:31.871Z"
     },
     {
