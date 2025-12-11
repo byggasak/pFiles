@@ -15,6 +15,13 @@
   ],
   "prompts": [
     {
+      "id": "1765443215013",
+      "title": "Analyze and visualize data",
+      "content": "Create an interactive dashboard where I can explore our marketing performance data from the last quarter.\n\nI've attached:\n- A channel-level performance CSV\n- A top-line monthly metrics CSV\n\nThe dashboard should include:\n\nOverview\n- Total revenue for the quarter\n- Net new MRR\n- Blended ROAS and blended CAC\n\nCharts\n- Month-over-month MRR growth with churn and net growth shown\n- Channel performance comparison (spend vs revenue vs ROAS)\n- Funnel velocity (leads → opportunities → new customers per month) if data is available\n\nInteraction\n- Filters by channel and month\n- Tabs or views for:\n  - Overview\n  - Channel View\n  - Planner / Recommendations\n\nDesign\n- Clean, minimal UI (no 3D charts)\n- Clear labels and tooltips\n\nBuild this as an interactive app so I can click around, change filters, and explore the data.",
+      "categoryId": "data",
+      "createdAt": "2025-12-11T08:53:35.013Z"
+    },
+    {
       "id": "1765442285878",
       "title": "Build a prototype",
       "content": "<prototype_requirements>\nBuild an interactive, clickable prototype with:\n- Realistic sample data (names, numbers, dates)\n- Functional navigation between all screens/sections\n- Visual feedback on interactions (hover states, button clicks, form submissions)\n- A polished, professional UI using a clean design system\n</prototype_requirements>\n\n<output_format>\n- Single-page app (SPA) or clear multi-page structure\n- Include mock data that demonstrates each feature working\n- Make all interactive elements clickable and functional within the prototype\n</output_format>\n\n<briefing>\nWhat are we building?\n[Short description of the app and its purpose]\n\nWho is the user?\n[Primary user persona(s) and what they care about]\n\nCore features needed:\n\n[Section or Feature Group 1]\n- [Feature 1]\n- [Feature 2]\n- [Feature 3]\n\n[Section or Feature Group 2]\n- [Feature 1]\n- [Feature 2]\n- [Feature 3]\n\n[Section or Feature Group 3]\n- [Feature 1]\n- [Feature 2]\n- [Feature 3]\n\nGlobal expectations\n- [Performance, accessibility, responsiveness, branding needs, etc.]\n</briefing>\n\nBuild this prototype so I can click through and test each feature.\nAsk clarifying questions if anything is ambiguous.",
