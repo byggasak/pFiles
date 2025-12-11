@@ -678,18 +678,33 @@
           },
 
           get filteredPrompts() {
-            let result = this.prompts;
-            if (this.activeCategory !== null) {
+            // Always search across all prompts when a search query is present.
+            // Only apply category filter when there is no search query.
+            const normalize = (str) =>
+              (str || '')
+                .toLowerCase()
+                .normalize('NFKD')
+                .replace(/\u00a0/g, ' ') // non‑breaking space -> space
+                .replace(/\s+/g, ' ');   // collapse whitespace
+
+            const hasQuery = this.searchQuery.trim().length > 0;
+            let result = hasQuery ? this.prompts : this.prompts;
+
+            if (!hasQuery && this.activeCategory !== null) {
               result = result.filter((p) => p.categoryId === this.activeCategory);
             }
-            if (this.searchQuery.trim()) {
-              const query = this.searchQuery.toLowerCase();
-              result = result.filter(
-                (p) =>
-                  p.title.toLowerCase().includes(query) ||
-                  p.content.toLowerCase().includes(query)
-              );
+
+            if (hasQuery) {
+              const query = normalize(this.searchQuery);
+              result = result.filter((p) => {
+                const titleMatch = normalize(p.title).includes(query);
+                const contentMatch = normalize(p.content).includes(query);
+                const category = this.getCategoryById(p.categoryId);
+                const categoryMatch = category ? normalize(category.name).includes(query) : false;
+                return titleMatch || contentMatch || categoryMatch;
+              });
             }
+
             return result;
           },
 
@@ -793,6 +808,14 @@
 
               const response = await fetch(url, { headers });
 
+              if (response.status === 404) {
+                // File doesn't exist yet - initialize with empty arrays
+                this.fileSha = null;
+                this.categories = [];
+                this.prompts = [];
+                return;
+              }
+
               if (!response.ok) {
                 throw new Error(`Failed to load: ${response.status}`);
               }
@@ -809,6 +832,9 @@
             } catch (error) {
               console.error("Failed to load data:", error);
               this.showToast("Failed to load prompts", "error");
+              // Initialize with empty arrays on error
+              this.categories = [];
+              this.prompts = [];
             } finally {
               this.loading = false;
             }
@@ -830,6 +856,18 @@
 
               const url = `https://api.github.com/repos/${this.config.owner}/${this.config.repo}/contents/${this.config.path}`;
 
+              // Build request body - only include sha if file exists (for updates)
+              const requestBody = {
+                message: this.fileSha ? "Update prompts via pFiles UI" : "Create prompts.json via pFiles UI",
+                content: btoa(unescape(encodeURIComponent(content))),
+                branch: this.config.branch,
+              };
+
+              // Only include SHA if file exists (for updates)
+              if (this.fileSha) {
+                requestBody.sha = this.fileSha;
+              }
+
               const response = await fetch(url, {
                 method: "PUT",
                 headers: {
@@ -837,12 +875,7 @@
                   Accept: "application/vnd.github.v3+json",
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                  message: "Update prompts via pFiles UI",
-                  content: btoa(unescape(encodeURIComponent(content))),
-                  sha: this.fileSha,
-                  branch: this.config.branch,
-                }),
+                body: JSON.stringify(requestBody),
               });
 
               if (!response.ok) {
