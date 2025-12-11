@@ -27,6 +27,13 @@
   ],
   "prompts": [
     {
+      "id": "1765445892775",
+      "title": "Structured Thinking, Complex Tasks",
+      "content": "Force the model to think in layers before responding.\n\nTemplate:\n\nBefore answering, complete these steps:\n\n[UNDERSTAND]\n- Restate the problem in your own words\n- Identify what's actually being asked\n\n[ANALYZE]\n- Break down into sub-components\n- Note any assumptions or constraints\n\n[STRATEGIZE]\n- Outline 2-3 potential approaches\n- Evaluate trade-offs\n\n[EXECUTE]\n- Provide your final answer\n- Explain your reasoning\n\nQuestion: [your question]\n\n---\n\nExample:\n\nBefore answering, complete these steps:\n\n[UNDERSTAND]\n- Restate the problem in your own words\n- Identify what's actually being asked\n\n[ANALYZE]\n- Break down into sub-components\n- Note any assumptions or constraints\n\n[STRATEGIZE]\n- Outline 2-3 potential approaches\n- Evaluate trade-offs\n\n[EXECUTE]\n- Provide your final answer\n- Explain your reasoning\n\nQuestion: Should I use microservices or monolith for a 5-person startup building a B2B SaaS with 1000 expected users in year one?",
+      "categoryId": "prompting",
+      "createdAt": "2025-12-11T09:38:12.775Z"
+    },
+    {
       "id": "1765445772914",
       "title": "Good & Bad examples",
       "content": "I need you to [task]. Here are examples:\n\n✅ GOOD Example 1: [example]\n✅ GOOD Example 2: [example]\n\n❌ BAD Example 1: [example]\nWhy it's bad: [reason]\n❌ BAD Example 2: [example]\nWhy it's bad: [reason]\n\nNow complete: [your actual task]\n\n---\n\nExample:\n\nI need you to write cold email subject lines. Here are examples:\n\n✅ GOOD: \"Quick question about your Q4 engineering roadmap\"\n✅ GOOD: \"Saw your post on distributed systems—thoughts on this?\"\n\n❌ BAD: \"URGENT: Limited Time Offer Inside!!!\"\nWhy it's bad: Spam trigger words, fake urgency\n❌ BAD: \"You won't believe what we built...\"\nWhy it's bad: Clickbait, no context\n\nNow write 5 subject lines for: SaaS tool that reduces cloud costs by 40%\n\n---\n\nThis eliminates 80% of generic AI responses.",
