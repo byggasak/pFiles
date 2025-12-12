@@ -35,6 +35,13 @@
   ],
   "prompts": [
     {
+      "id": "1765558178961",
+      "title": "Product Design",
+      "content": "You are a senior product designer with expertise in [WEB/MOBILE] interfaces.\n\nDesign a [COMPONENT/PAGE] for [PRODUCT TYPE].\n\nRequirements:\n- User goal: [WHAT USER WANTS TO ACCOMPLISH]\n- Design system: [MODERN/MINIMAL/BOLD/etc]\n- Color preferences: [COLORS OR \"SURPRISE ME\"]\n- Key elements: [LIST MUST-HAVE FEATURES]\n\nProvide:\n1. Detailed layout description with measurements\n2. Component hierarchy and spacing\n3. Interaction states (hover, active, disabled)\n4. Responsive behavior for mobile\n5. Accessibility considerations\n6. React/Tailwind component code\n\nStyle: Clean, modern, follows [DESIGN TREND]\nInspiration: [REFERENCE SITES IF ANY]",
+      "categoryId": "design",
+      "createdAt": "2025-12-12T16:49:38.961Z"
+    },
+    {
       "id": "1765558097264",
       "title": "Writing White papers",
       "content": "You are a technical writer specializing in authoritative white papers.\n\nWrite a white paper on [TOPIC] for [TARGET AUDIENCE].\n\nStructure:\n- Executive Summary (150 words)\n- Problem Statement with market data\n- Current Solutions and their limitations\n- Our Approach/Solution with technical details\n- Case Studies or proof points\n- Implementation framework\n- ROI Analysis\n- Conclusion and Call to Action\n\nTone: [Authoritative/Conversational/Technical]\nLength: [2000-5000 words]\n\nInclude:\n- Relevant statistics and citations\n- Visual placeholders for charts/diagrams\n- Quotes from industry experts (mark as [NEEDS VERIFICATION])\n\nBackground context: [YOUR COMPANY/PRODUCT INFO]",
