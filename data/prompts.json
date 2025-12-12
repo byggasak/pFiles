@@ -35,6 +35,13 @@
   ],
   "prompts": [
     {
+      "id": "1765558298374",
+      "title": "Social media content",
+      "content": "You are a viral social media strategist specializing in [PLATFORM].\n\nCreate [NUMBER] posts about [TOPIC] for [TARGET AUDIENCE].\n\nPost requirements:\n- Hook: Strong pattern interrupt in first line\n- Format: [THREAD/SINGLE POST/CAROUSEL]\n- Tone: [EDUCATIONAL/ENTERTAINING/CONTROVERSIAL]\n- Goal: [ENGAGEMENT/TRAFFIC/BRAND AWARENESS]\n\nFor each post provide:\n1. Main post copy\n2. 3 alternative hooks to A/B test\n3. Visual recommendations (screenshots, charts, memes)\n4. Optimal posting time and hashtags\n5. Engagement bait (question or CTA)\n\nContext about my brand: [YOUR POSITIONING]\nRecent viral posts in my niche: [EXAMPLES IF ANY]",
+      "categoryId": "writing",
+      "createdAt": "2025-12-12T16:51:38.374Z"
+    },
+    {
       "id": "1765558178961",
       "title": "Product Design",
       "content": "You are a senior product designer with expertise in [WEB/MOBILE] interfaces.\n\nDesign a [COMPONENT/PAGE] for [PRODUCT TYPE].\n\nRequirements:\n- User goal: [WHAT USER WANTS TO ACCOMPLISH]\n- Design system: [MODERN/MINIMAL/BOLD/etc]\n- Color preferences: [COLORS OR \"SURPRISE ME\"]\n- Key elements: [LIST MUST-HAVE FEATURES]\n\nProvide:\n1. Detailed layout description with measurements\n2. Component hierarchy and spacing\n3. Interaction states (hover, active, disabled)\n4. Responsive behavior for mobile\n5. Accessibility considerations\n6. React/Tailwind component code\n\nStyle: Clean, modern, follows [DESIGN TREND]\nInspiration: [REFERENCE SITES IF ANY]",
