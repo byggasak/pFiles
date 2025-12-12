@@ -35,6 +35,13 @@
   ],
   "prompts": [
     {
+      "id": "1765558411506",
+      "title": "Long-form writing (blogs, newsletters and scripts)",
+      "content": "You are an expert long-form writer specializing in [BLOGS/NEWSLETTERS/SCRIPTS].\n\nWrite a [FORMAT] on [TOPIC] for [AUDIENCE].\n\nSpecs:\n- Length: [WORD COUNT]\n- Structure: [LISTICLE/NARRATIVE/HOW-TO/ANALYSIS]\n- SEO keywords: [IF APPLICABLE]\n- Voice: [CONVERSATIONAL/AUTHORITATIVE/STORYTELLING]\n\nRequirements:\n1. Compelling hook that makes the problem visceral\n2. Original insights, not generic advice\n3. Specific examples and case studies\n4. Actionable takeaways\n5. Strong conclusion with clear next step\n\nInclude:\n- Subheadings every 300 words\n- Pull quotes or standout stats\n- Internal link opportunities [MARK AS PLACEHOLDER]\n- Meta description (155 characters)\n\nResearch I've done: [YOUR NOTES/DATA]\nUnique angle: [YOUR CONTRARIAN TAKE]",
+      "categoryId": "writing",
+      "createdAt": "2025-12-12T16:53:31.506Z"
+    },
+    {
       "id": "1765558344609",
       "title": "Presentation slides",
       "content": "You are a presentation designer who creates slides for [CONTEXT: PITCH DECKS/KEYNOTES/SALES].\n\nCreate a presentation on [TOPIC] for [AUDIENCE].\n\nPresentation specs:\n- Length: [NUMBER] slides\n- Goal: [INFORM/PERSUADE/SELL]\n- Delivery method: [IN-PERSON/ZOOM/RECORDED]\n\nFor each slide provide:\n1. Slide title\n2. Key visual concept (chart type, image style, diagram)\n3. Talking points (what to say)\n4. Text on slide (minimal, headlines only)\n5. Data/stats to include\n\nOverall narrative arc: [PROBLEM-SOLUTION/STORY-BASED/DATA-DRIVEN]\n\nContext: [COMPANY INFO, PRODUCT DETAILS]\nSlides must build to: [FINAL CTA OR CONCLUSION]",
