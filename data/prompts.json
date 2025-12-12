@@ -35,6 +35,13 @@
   ],
   "prompts": [
     {
+      "id": "1765558344609",
+      "title": "Presentation slides",
+      "content": "You are a presentation designer who creates slides for [CONTEXT: PITCH DECKS/KEYNOTES/SALES].\n\nCreate a presentation on [TOPIC] for [AUDIENCE].\n\nPresentation specs:\n- Length: [NUMBER] slides\n- Goal: [INFORM/PERSUADE/SELL]\n- Delivery method: [IN-PERSON/ZOOM/RECORDED]\n\nFor each slide provide:\n1. Slide title\n2. Key visual concept (chart type, image style, diagram)\n3. Talking points (what to say)\n4. Text on slide (minimal, headlines only)\n5. Data/stats to include\n\nOverall narrative arc: [PROBLEM-SOLUTION/STORY-BASED/DATA-DRIVEN]\n\nContext: [COMPANY INFO, PRODUCT DETAILS]\nSlides must build to: [FINAL CTA OR CONCLUSION]",
+      "categoryId": "design",
+      "createdAt": "2025-12-12T16:52:24.609Z"
+    },
+    {
       "id": "1765558298374",
       "title": "Social media content",
       "content": "You are a viral social media strategist specializing in [PLATFORM].\n\nCreate [NUMBER] posts about [TOPIC] for [TARGET AUDIENCE].\n\nPost requirements:\n- Hook: Strong pattern interrupt in first line\n- Format: [THREAD/SINGLE POST/CAROUSEL]\n- Tone: [EDUCATIONAL/ENTERTAINING/CONTROVERSIAL]\n- Goal: [ENGAGEMENT/TRAFFIC/BRAND AWARENESS]\n\nFor each post provide:\n1. Main post copy\n2. 3 alternative hooks to A/B test\n3. Visual recommendations (screenshots, charts, memes)\n4. Optimal posting time and hashtags\n5. Engagement bait (question or CTA)\n\nContext about my brand: [YOUR POSITIONING]\nRecent viral posts in my niche: [EXAMPLES IF ANY]",
