@@ -31,6 +31,10 @@
     {
       "id": "research",
       "name": "Research"
+    },
+    {
+      "id": "misc.",
+      "name": "Misc."
     }
   ],
   "prompts": [
