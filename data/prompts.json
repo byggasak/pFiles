@@ -39,6 +39,13 @@
   ],
   "prompts": [
     {
+      "id": "1766315601423",
+      "title": "Prompting itself",
+      "content": "Write a prompt that would make you excel at [task]",
+      "categoryId": "prompting",
+      "createdAt": "2025-12-21T11:13:21.423Z"
+    },
+    {
       "id": "1766125703813",
       "title": "Job Hunt",
       "content": "1. Rewrite Your Resume for Max Impact\n\nPrompt: “Here’s my background: [roles, skills, achievements with numbers].\n\nRewrite my resume for [specific role] in [industry/country].\n\nMake it ATS friendly, action-verb heavy, and results focused.”\n\n-------------------------------------\n\n2. Tailor Your Resume to the Job\n\nPrompt: “Here’s the job description: [paste].\n\nCompare it to my resume.\n\nHighlight missing skills and rewrite my experience so it matches 80% to 90% of the requirements, without exaggeration.”\n\n-------------------------------------\n\n3. Craft a Standout Cover Letter\n\nPrompt: “Write a 4-5 sentence cover letter for this job: [paste description].\n\nMake it personal, mention one measurable achievement, and end with a strong call to action.”\n\nNo fluff. Just value.\n\n-------------------------------------\n\n4. Simulate Tough Interviews\n\nPrompt: “You’re the hiring manager for [job role].\n\nAsk me 10 behavioral and technical questions.\n\nAfter each answer, give feedback on clarity, tone, and depth, and suggest improvements.”\n\nIt’s like having an AI interview coach 24/7.\n\n-------------------------------------\n\n5. Find Your Hidden Differentiators\n\nPrompt: “Analyze my career history: [paste].\n\nIdentify 3 to 5 unique strengths or personal stories I can use to stand out in interviews.”\n\nBecause standing out isn’t about saying more.\n\nIt’s about saying what matters.\n\n",
