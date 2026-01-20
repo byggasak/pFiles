@@ -43,6 +43,13 @@
   ],
   "prompts": [
     {
+      "id": "1768894494267",
+      "title": "Marketing skills for Claude Code",
+      "content": "https://github.com/coreyhaines31/marketingskills",
+      "categoryId": "marketing",
+      "createdAt": "2026-01-20T07:34:54.267Z"
+    },
+    {
       "id": "1766649740450",
       "title": "Documentary photography",
       "content": "The image is a hyper-realistic documentary photograph captured with a Sony A7R V and a 35mm prime lens, stopped down to f/11 for a deep depth of field where every element from foreground to background is in tack-sharp, clinical focus. The aesthetic is 'unobserved reality' as if the camera is an invisible witness to a spontaneous moment. Lighting is unmediated and situational, capturing the high-dynamic range of the environment exactly as the human eye perceives it, without artificial bounce or flattering diffusion. Surfaces are rendered with extreme micro-contrast, highlighting the tactile physicality and natural imperfections of materials without 'AI gloss' or plastic smoothing. Human skin subtle asymmetries. The composition is unstructured and asymmetrical, avoiding all 'golden ratio' or cinematic framing. No lens flares, no bokeh, no film grain, no post-processing, and no stylistic filters. The final result should be indistinguishable from a high-resolution RAW file of an actual event",
