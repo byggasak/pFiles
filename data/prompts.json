@@ -35,6 +35,10 @@
     {
       "id": "misc.",
       "name": "Misc."
+    },
+    {
+      "id": "marketing",
+      "name": "Marketing"
     }
   ],
   "prompts": [
